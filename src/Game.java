@@ -20,6 +20,8 @@ public class Game {
         mark(s.position, 's');
     }
 
+
+
     public void play() {
         char c = snake.nextMove();
         Position newPosition = new Position(-1, -1);
@@ -84,9 +86,9 @@ public class Game {
                 resetFood();
             } else {
                 System.out.println();
-                snake.position = newPosition;
                 snake.pushPosition(newPosition, true);
             }
+            snake.position = newPosition;
             mark(newPosition, 's');
         }
 
@@ -100,15 +102,16 @@ public class Game {
     }
 
     public boolean validate(Position p) {
-        return grid[p.row][p.col] == '.';
+        char c = grid[p.row][p.col];
+
+        return c == '.' || c == 'f';
     }
 
     public Position generateFood() {
-        int row = random(1, 15);
-        int col = random(1, 15);
+        int row = random(2, 2);
+        int col = random(1, 1);
 
         while (grid[row][col] != '.') {
-            System.out.println("regen");
             row = random(1, 15);
             col = random(1, 15);
         }

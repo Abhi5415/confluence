@@ -8,8 +8,5 @@ public class Main {
         g.play();
         g.play();
         g.play();
-
-//        g.debug();
-
     }
 }

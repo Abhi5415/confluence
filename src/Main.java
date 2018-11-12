@@ -1,8 +1,14 @@
 public class Main {
     public static void main(String[] args) {
-        Game g = new Game();
+        Snake s = new Snake();
+
+        Game g = new Game(s);
+
+        g.play();
+
+//        g.debug();
 
 
-        g.debug();
+
     }
 }

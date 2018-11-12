@@ -14,5 +14,9 @@ public class Snake {
         snake.add(p);
     }
 
+    public char nextMove() {
+        return 's';
+    }
+
 
 }

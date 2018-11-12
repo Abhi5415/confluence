@@ -81,4 +81,6 @@ public class Genome implements Constants{
         randomizeSuccess(11, this.foodVision, g.foodVision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
     }
 
+
+
 }

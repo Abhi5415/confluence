@@ -9,21 +9,10 @@ public class Game {
     public Game(Snake s) {
         grid = new char[17][17];
         previousDirection = 'd';
-
-        for (int i = 0; i < grid.length; i++) {
-            grid[0][i] = 'w';
-            grid[i][0] = 'w';
-            grid[16][i] = 'w';
-            grid[i][16] = 'w';
-        }
-
-        for (int i = 1; i < grid.length - 1; i++) {
-            for (int j = 1; j < grid.length - 1; j++) {
-                grid[i][j] = '.';
-            }
-        }
-
         snake = s;
+
+        makeGrid();
+
         food = generateFood();
 
         mark(s.position, 's');
@@ -39,43 +28,61 @@ public class Game {
         switch (previousDirection) {
             case 'u':
                 if (c == 's')
-                    newPosition = new Position(y - 1, x);
-                else if (c == 'l')
-                    newPosition = new Position(y, x - 1);
-                else if (c == 'r')
-                    newPosition = new Position(y, x + 1);
+                    newPosition = new Position(x, y - 1);
+                else if (c == 'l') {
+                    newPosition = new Position(x - 1, y);
+                    previousDirection = 'l';
+                } else if (c == 'r') {
+                    newPosition = new Position(x + 1, y);
+                    previousDirection = 'r';
+                }
                 break;
             case 'd':
                 if (c == 's')
-                    newPosition = new Position(y + 1, x);
-                else if (c == 'l')
-                    newPosition = new Position(y, x + 1);
-                else if (c == 'r')
-                    newPosition = new Position(y, x - 1);
+                    newPosition = new Position(x, y + 1);
+                else if (c == 'l') {
+                    newPosition = new Position(x + 1, y);
+                    previousDirection = 'u';
+                } else if (c == 'r') {
+                    newPosition = new Position(x - 1, y);
+                    previousDirection = 'd';
+                }
                 break;
             case 'r':
                 if (c == 's')
-                    newPosition = new Position(y, x + 1);
-                else if (c == 'l')
-                    newPosition = new Position(y - 1, x);
-                else if (c == 'r')
-                    newPosition = new Position(y + 1, x);
+                    newPosition = new Position(x + 1, y);
+                else if (c == 'l') {
+                    newPosition = new Position(x, y - 1);
+                    previousDirection = 'u';
+                } else if (c == 'r') {
+                    newPosition = new Position(x, y + 1);
+                    previousDirection = 'd';
+                }
                 break;
             case 'l':
                 if (c == 's')
-                    newPosition = new Position(y, x - 1);
-                else if (c == 'l')
-                    newPosition = new Position(y + 1, x);
-                else if (c == 'r')
-                    newPosition = new Position(y - 1, x);
+                    newPosition = new Position(x - 1, y);
+                else if (c == 'l') {
+                    newPosition = new Position(x, y + 1);
+                    previousDirection = 'd';
+                } else if (c == 'r') {
+                    newPosition = new Position(x, y - 1);
+                    previousDirection = 'u';
+                }
                 break;
         }
 
-
         if (!validate(newPosition)) {
             System.out.println("Invalid");
+            return;
         } else {
-            System.out.println();
+            if (grid[newPosition.y][newPosition.x] == 'f') {
+                snake.pushPosition(newPosition, false);
+            } else {
+                System.out.println();
+                snake.position = newPosition;
+                snake.pushPosition(newPosition, true);
+            }
             mark(newPosition, 's');
         }
 
@@ -91,9 +98,9 @@ public class Game {
         int x = random(1, 16);
         int y = random(1, 16);
 
-        while (grid[y][x] == 'f') {
-            x = random(1, 16);
-            y = random(1, 16);
+        while (grid[y][x] != '.') {
+            x = random(1, 15);
+            y = random(1, 15);
         }
 
         return new Position(x, y);
@@ -107,7 +114,28 @@ public class Game {
         grid[p.y][p.x] = c;
     }
 
+    public void makeGrid() {
+        for (int i = 0; i < grid.length; i++) {
+            grid[0][i] = 'w';
+            grid[i][0] = 'w';
+            grid[16][i] = 'w';
+            grid[i][16] = 'w';
+        }
+
+        for (int i = 1; i < grid.length - 1; i++) {
+            for (int j = 1; j < grid.length - 1; j++) {
+                grid[i][j] = '.';
+            }
+        }
+
+        for (Position p : snake.snake) {
+            grid[p.y][p.x] = 's';
+        }
+    }
+
     public void debug() {
+        makeGrid();
+
         for (int i = 0; i < grid.length; i++) {
             System.out.println(Arrays.toString(grid[i]));
         }

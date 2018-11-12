@@ -4,11 +4,11 @@ public class Game {
     char[][] grid;
     Snake snake;
     Position food;
-    char previousDirection;
+    char absolutePreviousPosition;
 
     public Game(Snake s) {
         grid = new char[17][17];
-        previousDirection = 'd';
+        absolutePreviousPosition = 'd';
         snake = s;
 
         makeGrid();
@@ -22,52 +22,52 @@ public class Game {
     public void play() {
         char c = snake.nextMove();
         Position newPosition = new Position(-1, -1);
-        int x = snake.position.x;
-        int y = snake.position.y;
+        int row = snake.position.row;
+        int col = snake.position.col;
 
-        switch (previousDirection) {
+        switch (absolutePreviousPosition) {
             case 'u':
                 if (c == 's')
-                    newPosition = new Position(x, y - 1);
+                    newPosition = new Position(row - 1, col);
                 else if (c == 'l') {
-                    newPosition = new Position(x - 1, y);
-                    previousDirection = 'l';
+                    newPosition = new Position(row, col - 1);
+                    absolutePreviousPosition = 'l';
                 } else if (c == 'r') {
-                    newPosition = new Position(x + 1, y);
-                    previousDirection = 'r';
+                    newPosition = new Position(row, col + 1);
+                    absolutePreviousPosition = 'r';
                 }
                 break;
             case 'd':
                 if (c == 's')
-                    newPosition = new Position(x, y + 1);
+                    newPosition = new Position(row + 1, col);
                 else if (c == 'l') {
-                    newPosition = new Position(x + 1, y);
-                    previousDirection = 'u';
+                    newPosition = new Position(row, col + 1);
+                    absolutePreviousPosition = 'u';
                 } else if (c == 'r') {
-                    newPosition = new Position(x - 1, y);
-                    previousDirection = 'd';
+                    newPosition = new Position(row, col - 1);
+                    absolutePreviousPosition = 'd';
                 }
                 break;
             case 'r':
                 if (c == 's')
-                    newPosition = new Position(x + 1, y);
+                    newPosition = new Position(row, col + 1);
                 else if (c == 'l') {
-                    newPosition = new Position(x, y - 1);
-                    previousDirection = 'u';
+                    newPosition = new Position(row - 1, col);
+                    absolutePreviousPosition = 'u';
                 } else if (c == 'r') {
-                    newPosition = new Position(x, y + 1);
-                    previousDirection = 'd';
+                    newPosition = new Position(row + 1, col);
+                    absolutePreviousPosition = 'd';
                 }
                 break;
             case 'l':
                 if (c == 's')
-                    newPosition = new Position(x - 1, y);
+                    newPosition = new Position(row, col - 1);
                 else if (c == 'l') {
-                    newPosition = new Position(x, y + 1);
-                    previousDirection = 'd';
+                    newPosition = new Position(row + 1, col);
+                    absolutePreviousPosition = 'd';
                 } else if (c == 'r') {
-                    newPosition = new Position(x, y - 1);
-                    previousDirection = 'u';
+                    newPosition = new Position(row - 1, col);
+                    absolutePreviousPosition = 'u';
                 }
                 break;
         }
@@ -76,7 +76,7 @@ public class Game {
             System.out.println("Invalid");
             return;
         } else {
-            if (grid[newPosition.y][newPosition.x] == 'f') {
+            if (grid[newPosition.row][newPosition.col] == 'f') {
                 snake.pushPosition(newPosition, false);
             } else {
                 System.out.println();
@@ -91,7 +91,7 @@ public class Game {
     }
 
     public boolean validate(Position p) {
-        return grid[p.y][p.x] == '.';
+        return grid[p.row][p.col] == '.';
     }
 
     public Position generateFood() {
@@ -111,7 +111,7 @@ public class Game {
     }
 
     public void mark(Position p, char c) {
-        grid[p.y][p.x] = c;
+        grid[p.row][p.col] = c;
     }
 
     public void makeGrid() {
@@ -129,7 +129,7 @@ public class Game {
         }
 
         for (Position p : snake.snake) {
-            grid[p.y][p.x] = 's';
+            grid[p.row][p.col] = 's';
         }
     }
 

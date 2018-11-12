@@ -1,5 +1,3 @@
-
-
 public class Genome implements Constants{
     double wallDistance;
     double foodPositionX[];

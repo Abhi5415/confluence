@@ -1,17 +1,17 @@
 public class Position {
-    int x;
-    int y;
+    int row;
+    int col;
 
-    public Position(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Position(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
     @Override
     public String toString() {
         return "Position{" +
-                "x=" + x +
-                ", y=" + y +
+                "row=" + row +
+                ", col=" + col +
                 '}';
     }
 }

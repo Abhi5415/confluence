@@ -5,18 +5,19 @@ public class Game {
     Snake snake;
     Position food;
     char absolutePreviousPosition;
+    int score;
+    int moves;
 
     public Game(Snake s) {
         grid = new char[17][17];
         absolutePreviousPosition = 'd';
         snake = s;
+        moves = 0;
+        score = 0;
 
         makeGrid();
 
-        food = generateFood();
-
         mark(s.position, 's');
-        mark(food, 'f');
     }
 
     public void play() {
@@ -76,8 +77,11 @@ public class Game {
             System.out.println("Invalid");
             return;
         } else {
+            moves++;
             if (grid[newPosition.row][newPosition.col] == 'f') {
                 snake.pushPosition(newPosition, false);
+                score++;
+                resetFood();
             } else {
                 System.out.println();
                 snake.position = newPosition;
@@ -86,8 +90,13 @@ public class Game {
             mark(newPosition, 's');
         }
 
+
         debug();
 
+    }
+
+    public void resetFood() {
+        food = generateFood();
     }
 
     public boolean validate(Position p) {
@@ -95,15 +104,16 @@ public class Game {
     }
 
     public Position generateFood() {
-        int x = random(1, 16);
-        int y = random(1, 16);
+        int row = random(1, 15);
+        int col = random(1, 15);
 
-        while (grid[y][x] != '.') {
-            x = random(1, 15);
-            y = random(1, 15);
+        while (grid[row][col] != '.') {
+            System.out.println("regen");
+            row = random(1, 15);
+            col = random(1, 15);
         }
 
-        return new Position(x, y);
+        return new Position(row, col);
     }
 
     public int random(int low, int high) {
@@ -131,6 +141,12 @@ public class Game {
         for (Position p : snake.snake) {
             grid[p.row][p.col] = 's';
         }
+
+        if (food == null) {
+            resetFood();
+        }
+
+        grid[food.row][food.col] = 'f';
     }
 
     public void debug() {

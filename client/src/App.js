@@ -2,28 +2,31 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Button } from "antd";
 
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      response: false,
-      endpoint: "http://localhost:3000"
-    };
+    const endpoint = "http://localhost:3000";
+    this.socket = io(endpoint);
   }
 
+  requestWork = () => {
+    this.socket.emit("work", 1000);
+  };
+
   componentDidMount() {
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on("test", data => this.setState({ response: data }));
+    console.log("Requesting some work");
+    console.log(this.socket);
   }
 
   render() {
     return (
       <div>
         <h1>Test</h1>
-        <Button type="dashed">Connect to Server</Button>
+        <Button type="dashed" onClick={() => this.requestWork()}>
+          Connect to Server
+        </Button>
       </div>
     );
   }

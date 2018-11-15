@@ -9,9 +9,12 @@ var io = require("socket.io")(server);
 //   res.sendFile(__dirname + "/index.html");
 // });
 
-io.on("connection", () => {
+io.on("connection", socket => {
   console.log("New node connected");
-  io.emit("test", { data: "data" });
+
+  socket.on("work", () => {
+    console.log("Client requesting some data");
+  });
 });
 
 const port = process.env.PORT || 3000;

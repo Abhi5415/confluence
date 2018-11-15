@@ -11,14 +11,19 @@ export default class App extends Component {
     this.socket = io(endpoint);
   }
 
-  requestWork = () => {
-    this.socket.emit("work", 1000);
+  compute = parcel => {
+    console.log("received parcel", parcel);
+    const fcn = eval(parcel.parcel.function);
+    console.log(fcn(1901));
   };
 
-  componentDidMount() {
-    console.log("Requesting some work");
-    console.log(this.socket);
-  }
+  requestWork = () => {
+    // console.log("requesting work");
+    this.socket.emit("requestWork", 1000);
+    this.socket.on("updateWorkStatus", parcel => this.compute(parcel));
+  };
+
+  componentDidMount() {}
 
   render() {
     return (

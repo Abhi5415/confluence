@@ -9,11 +9,28 @@ var io = require("socket.io")(server);
 //   res.sendFile(__dirname + "/index.html");
 // });
 
-io.on("connection", socket => {
-  console.log("New node connected");
+const createWork = () => {
+  const data = [];
 
-  socket.on("work", () => {
-    console.log("Client requesting some data");
+  for (var i = 0; i < 10000; i++) {
+    data.push({
+      id: i,
+      farRange: Math.random()
+    });
+  }
+
+  const f = `x => x - Math.sin(x)`;
+
+  return {
+    function: f,
+    data
+  };
+};
+
+io.on("connection", client => {
+  client.on("requestWork", data => {
+    const parcel = createWork();
+    client.emit("updateWorkStatus", { parcel });
   });
 });
 

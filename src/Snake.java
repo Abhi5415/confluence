@@ -4,6 +4,7 @@ import java.util.Queue;
 public class Snake {
     Queue<Position> snake;
     Position position;
+    Genome genome;
 
     public Snake() {
         snake = new ArrayDeque<>();
@@ -19,7 +20,78 @@ public class Snake {
         snake.add(p);
     }
 
-    public char nextMove() {
+    public char nextMove(char[][] grid, Position p, Position food, char currentDirection, Genome genome) {
+        double ratingS = 0;
+        double ratingL = 0;
+        double ratingR = 0;
+
+        char moveL = 's';
+        char moveR = 's';
+        Position posS = new Position(0, 0);
+        Position posL = new Position(0, 0);
+        Position posR = new Position(0, 0);
+
+        switch (currentDirection) {
+            case 'u':
+                moveL = 'l';
+                moveR = 'r';
+                posS = new Position(p.row - 1, p.col);
+                posL = new Position(p.row, p.col - 1);
+                posR = new Position(p.row, p.col + 1);
+                break;
+            case 'd':
+                moveL = 'r';
+                moveR = 'l';
+                posS = new Position(p.row + 1, p.col);
+                posL = new Position(p.row, p.col + 1);
+                posR = new Position(p.row, p.col - 1);
+                break;
+            case 'r':
+                moveL = 'u';
+                moveR = 'd';
+                posS = new Position(p.row, p.col + 1);
+                posL = new Position(p.row - 1, p.col);
+                posR = new Position(p.row + 1, p.col);
+                break;
+            case 'l':
+                moveL = 'd';
+                moveR = 'u';
+                posS = new Position(p.row, p.col - 1);
+                posL = new Position(p.row + 1, p.col);
+                posR = new Position(p.row - 1, p.col);
+                break;
+        }
+
+//        double foodPositionX[];
+//        double foodPositionY[];
+//        double vision[]; //has 11 checks at various indecies near the snake (for its body)
+//        double foodVision[]; //same 11 check food near the snake (for the food)
+//        char currentDirection;
+
+
+        ratingS += distanceToNearestObstacle(grid, p, currentDirection) * genome.wallDistance;
+        ratingL += distanceToNearestObstacle(grid, p, moveL) * genome.wallDistance;
+        ratingR += distanceToNearestObstacle(grid, p, moveR) * genome.wallDistance;
+
+        ratingS += freeSpacesAtIndex(grid, posS) * genome.freeSpace;
+        ratingL += freeSpacesAtIndex(grid, posL) * genome.freeSpace;
+        ratingR += freeSpacesAtIndex(grid, posR) * genome.freeSpace;
+
+        ratingS += relativeX(posS, food) * genome.foodPositionX[0];
+        ratingL += relativeX(posL, food) * genome.foodPositionX[1];
+        ratingR += relativeX(posR, food) * genome.foodPositionX[2];
+
+        ratingS += relativeY(posS, food) * genome.foodPositionY[0];
+        ratingL += relativeY(posL, food) * genome.foodPositionY[1];
+        ratingR += relativeY(posR, food) * genome.foodPositionY[2];
+
+        if (!isValidMove(posS, grid))
+            ratingS -= 200;
+        if (!isValidMove(posL, grid))
+            ratingL -= 200;
+        if (!isValidMove(posR, grid))
+            ratingR -= 200;
+
         return 's';
     }
 
@@ -84,7 +156,17 @@ public class Snake {
 
         return res;
     }
-    
+
+    public int relativeX(Position p, Position food) {
+        return food.col - p.col;
+    }
+
+    /*
+     * Calculates relative y position with respect to b1. Assumes the move is valid.
+     */
+    public int relativeY(Position p, Position food) {
+        return food.row - p.row;
+    }
 
 }
 

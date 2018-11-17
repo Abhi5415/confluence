@@ -6,9 +6,10 @@ public class Snake {
     Position position;
     Genome genome;
 
-    public Snake() {
+    public Snake(Genome g, Position p) {
         snake = new ArrayDeque<>();
-        position = new Position(1,1);
+        position = p;
+        genome = g;
         pushPosition(position, true);
     }
 
@@ -20,7 +21,7 @@ public class Snake {
         snake.add(p);
     }
 
-    public char nextMove(char[][] grid, Position p, Position food, char currentDirection, Genome genome) {
+    public char nextMove(char[][] grid, Position p, Position food, char currentDirection) {
         double ratingS = 0;
         double ratingL = 0;
         double ratingR = 0;
@@ -92,7 +93,13 @@ public class Snake {
         if (!isValidMove(posR, grid))
             ratingR -= 200;
 
-        return 's';
+        if (ratingS >= ratingL && ratingS >= ratingR) {
+            return 's';
+        } else if (ratingL >= ratingS && ratingL >= ratingR) {
+            return 'l';
+        }
+
+        return 'r';
     }
 
     // Looks for valid moves from the grid

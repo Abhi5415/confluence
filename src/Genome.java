@@ -3,8 +3,6 @@ public class Genome implements Constants{
     double foodPositionX[];
     double foodPositionY[];
     double freeSpace;
-    double vision[]; //has 11 checks at various indecies near the snake (for its body)
-    double foodVision[]; //same 11 check food near the snake (for the food)
     char currentDirection;
 
     //------------------- tools ----------------------
@@ -43,13 +41,14 @@ public class Genome implements Constants{
         // ------ constant for game -----
         this.currentDirection = ' ';
 
+        foodPositionX = new double[3];
+        foodPositionY = new double[3];
+
         // ------ initializing genome population ------
         this.wallDistance = random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND);
         this.freeSpace = random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND);
         intitializeArray(3, this.foodPositionX);
         intitializeArray(3, this.foodPositionY);
-        intitializeArray(11, this.vision);
-        intitializeArray(11, this.foodVision);
     }
 
     // -
@@ -62,8 +61,8 @@ public class Genome implements Constants{
         this.freeSpace = random(g1.freeSpace , g2.freeSpace);
         makeChild(3, this.foodPositionX, g1.foodPositionX, g2.foodPositionX);
         makeChild(3, this.foodPositionY, g1.foodPositionY, g2.foodPositionY);
-        makeChild(11, this.vision, g1.vision, g2.vision);
-        makeChild(11, this.foodVision, g1.foodVision, g2.foodVision);
+//        makeChild(11, this.vision, g1.vision, g2.vision);
+//        makeChild(11, this.foodVision, g1.foodVision, g2.foodVision);
     }
 
     public Genome(Genome g){
@@ -75,8 +74,8 @@ public class Genome implements Constants{
         this.freeSpace = g.wallDistance * random(RANDOM_MULTIPLIER_LOWER, RANDOM_MULTIPLIER_UPPER);
         randomizeSuccess(3, this.foodPositionX, g.foodPositionX, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
         randomizeSuccess(3, this.foodPositionY, g.foodPositionY, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
-        randomizeSuccess(11, this.vision, g.vision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
-        randomizeSuccess(11, this.foodVision, g.foodVision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
+//        randomizeSuccess(11, this.vision, g.vision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
+//        randomizeSuccess(11, this.foodVision, g.foodVision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
     }
 
 

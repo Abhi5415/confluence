@@ -20,10 +20,17 @@ public class Game {
         mark(s.position, 's');
     }
 
+    public int playGame() {
+        while (!play()) {
+
+        }
+        return score;
+    }
 
 
-    public void play() {
-        char c = snake.nextMove();
+    public boolean play() {
+        char c = snake.nextMove(grid, snake.position, food, absolutePreviousPosition);
+        System.out.println(c);
         Position newPosition = new Position(-1, -1);
         int row = snake.position.row;
         int col = snake.position.col;
@@ -76,8 +83,7 @@ public class Game {
         }
 
         if (!validate(newPosition)) {
-            System.out.println("Invalid");
-            return;
+            return false;
         } else {
             moves++;
             if (grid[newPosition.row][newPosition.col] == 'f') {
@@ -85,16 +91,14 @@ public class Game {
                 score++;
                 resetFood();
             } else {
-                System.out.println();
                 snake.pushPosition(newPosition, true);
             }
             snake.position = newPosition;
             mark(newPosition, 's');
         }
-
-
         debug();
 
+        return true;
     }
 
     public void resetFood() {

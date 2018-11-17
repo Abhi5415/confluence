@@ -1,10 +1,11 @@
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class Snake {
+public class Snake implements Comparable {
     Queue<Position> snake;
     Position position;
     Genome genome;
+    int score;
 
     public Snake(Genome g, Position p) {
         snake = new ArrayDeque<>();
@@ -87,11 +88,11 @@ public class Snake {
         ratingR += relativeY(posR, food) * genome.foodPositionY[2];
 
         if (!isValidMove(posS, grid))
-            ratingS -= 200;
+            ratingS -= 2000;
         if (!isValidMove(posL, grid))
-            ratingL -= 200;
+            ratingL -= 2000;
         if (!isValidMove(posR, grid))
-            ratingR -= 200;
+            ratingR -= 2000;
 
         if (ratingS >= ratingL && ratingS >= ratingR) {
             return 's';
@@ -106,7 +107,7 @@ public class Snake {
     public boolean isValidMove(Position p, char[][] grid) {
         int r = p.row;
         int c = p.col;
-        if (!(r >= 1 && r <= 15 && c >= 1 && c <= 1))
+        if (!(r >= 1 && r <= 15 && c >= 1 && c <= 15))
             return false;
         return grid[r][c] == '.';
     }
@@ -175,5 +176,19 @@ public class Snake {
         return food.row - p.row;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        Snake compare = (Snake) o;
+        if (compare.score >= score) return 1;
+        return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Snake{" +
+                "score=" + score +
+                ",genome=" + genome +
+                '}';
+    }
 }
 

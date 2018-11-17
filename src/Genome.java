@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Genome implements Constants{
     double wallDistance;
     double foodPositionX[];
@@ -40,7 +42,6 @@ public class Genome implements Constants{
     public Genome() {
         // ------ constant for game -----
         this.currentDirection = ' ';
-
         foodPositionX = new double[3];
         foodPositionY = new double[3];
 
@@ -55,6 +56,8 @@ public class Genome implements Constants{
     public Genome(Genome g1, Genome g2) {
         // ------ constant for game -----
         this.currentDirection = ' ';
+        foodPositionX = new double[3];
+        foodPositionY = new double[3];
 
         // ------ initializing genome population ------
         this.wallDistance = random(g1.wallDistance, g2.wallDistance);
@@ -68,7 +71,8 @@ public class Genome implements Constants{
     public Genome(Genome g){
         // ------ constant for game -----
         this.currentDirection = ' ';
-
+        foodPositionX = new double[3];
+        foodPositionY = new double[3];
         // ------ initializing genome population ------
         this.wallDistance = g.wallDistance * random(RANDOM_MULTIPLIER_LOWER, RANDOM_MULTIPLIER_UPPER);
         this.freeSpace = g.wallDistance * random(RANDOM_MULTIPLIER_LOWER, RANDOM_MULTIPLIER_UPPER);
@@ -79,5 +83,14 @@ public class Genome implements Constants{
     }
 
 
-
+    @Override
+    public String toString() {
+        return "Genome{" +
+                "wallDistance=" + wallDistance +
+                ", foodPositionX=" + Arrays.toString(foodPositionX) +
+                ", foodPositionY=" + Arrays.toString(foodPositionY) +
+                ", freeSpace=" + freeSpace +
+                ", currentDirection=" + currentDirection +
+                '}';
+    }
 }

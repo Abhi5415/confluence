@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Game {
+public class Game implements Constants {
     char[][] grid;
     Snake snake;
     Position food;
@@ -20,26 +20,25 @@ public class Game {
         mark(s.position, 's');
     }
 
-    public int playGame() {
-        while (!play()) {
-
-        }
-        return score;
+    public void playGame() {
+        while(play());
+        snake.score = score;
     }
 
 
     public boolean play() {
         char c = snake.nextMove(grid, snake.position, food, absolutePreviousPosition);
-        System.out.println(c);
+//        System.out.println(c);
         Position newPosition = new Position(-1, -1);
         int row = snake.position.row;
         int col = snake.position.col;
 
         switch (absolutePreviousPosition) {
             case 'u':
-                if (c == 's')
+                if (c == 's') {
                     newPosition = new Position(row - 1, col);
-                else if (c == 'l') {
+                    absolutePreviousPosition = 'u';
+                } else if (c == 'l') {
                     newPosition = new Position(row, col - 1);
                     absolutePreviousPosition = 'l';
                 } else if (c == 'r') {
@@ -48,20 +47,22 @@ public class Game {
                 }
                 break;
             case 'd':
-                if (c == 's')
+                if (c == 's') {
                     newPosition = new Position(row + 1, col);
-                else if (c == 'l') {
+                    absolutePreviousPosition = 'd';
+                } else if (c == 'l') {
                     newPosition = new Position(row, col + 1);
-                    absolutePreviousPosition = 'u';
+                    absolutePreviousPosition = 'r';
                 } else if (c == 'r') {
                     newPosition = new Position(row, col - 1);
-                    absolutePreviousPosition = 'd';
+                    absolutePreviousPosition = 'l';
                 }
                 break;
             case 'r':
-                if (c == 's')
+                if (c == 's') {
                     newPosition = new Position(row, col + 1);
-                else if (c == 'l') {
+                    absolutePreviousPosition = 'r';
+                } else if (c == 'l') {
                     newPosition = new Position(row - 1, col);
                     absolutePreviousPosition = 'u';
                 } else if (c == 'r') {
@@ -70,9 +71,10 @@ public class Game {
                 }
                 break;
             case 'l':
-                if (c == 's')
+                if (c == 's') {
                     newPosition = new Position(row, col - 1);
-                else if (c == 'l') {
+                    absolutePreviousPosition = 'l';
+                } else if (c == 'l') {
                     newPosition = new Position(row + 1, col);
                     absolutePreviousPosition = 'd';
                 } else if (c == 'r') {
@@ -83,9 +85,11 @@ public class Game {
         }
 
         if (!validate(newPosition)) {
+//            System.out.println("Invalid move");
             return false;
         } else {
             moves++;
+            if (moves >= MAX_MOVES) return false;
             if (grid[newPosition.row][newPosition.col] == 'f') {
                 snake.pushPosition(newPosition, false);
                 score++;
@@ -159,8 +163,8 @@ public class Game {
     public void debug() {
         makeGrid();
 
-        for (int i = 0; i < grid.length; i++) {
-            System.out.println(Arrays.toString(grid[i]));
-        }
+//        for (int i = 0; i < grid.length; i++) {
+//            System.out.println(Arrays.toString(grid[i]));
+//        }
     }
 }

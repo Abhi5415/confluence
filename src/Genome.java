@@ -7,6 +7,16 @@ public class Genome implements Constants{
     double freeSpace;
     char currentDirection;
 
+    public Genome clone() {
+        Genome g = new Genome();
+        g.wallDistance = wallDistance;
+        g.foodPositionX = foodPositionX;
+        g.foodPositionY = foodPositionY;
+        g.freeSpace = freeSpace;
+        g.currentDirection = currentDirection;
+        return g;
+    }
+
     //------------------- tools ----------------------
 
     public double random(double low, double high) {

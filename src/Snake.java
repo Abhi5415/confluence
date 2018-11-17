@@ -6,13 +6,24 @@ public class Snake implements Comparable {
     Position position;
     Genome genome;
     int score;
+    Position original;
 
     public Snake(Genome g, Position p) {
+        original = p;
         snake = new ArrayDeque<>();
         position = p;
         genome = g;
         pushPosition(position, true);
     }
+
+    public Snake clone() {
+        Snake s= new Snake(genome.clone(), original);
+        s.snake = new ArrayDeque<>();
+//        s.score = 0;
+        return s;
+    }
+
+
 
     public void pushPosition(Position p, boolean deleteTail) {
         if (deleteTail) {
@@ -178,9 +189,9 @@ public class Snake implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        Snake compare = (Snake) o;
-        if (compare.score >= score) return 1;
-        return -1;
+        if (((Snake)o).score > score) return 1;
+        else if (((Snake)o).score < score) return -1;
+        return 0;
     }
 
     @Override

@@ -7,49 +7,59 @@ public class Main implements Constants {
         ArrayList<Snake> currentGeneration = new ArrayList<>();
 
         // make initial generation
-        for (int i = 0; i < NUMBER_OF_GENOMES; i++) {
+        for (int i = 0; i < 100; i++) {
             currentGeneration.add(new Snake(new Genome(), new Position(5,5)));
         }
 
-        ArrayList<Snake> newGeneration = new ArrayList<>();
+        int gens = 500;
+        for (int generation = 0; generation < gens; generation++) {
 
-        for (int generation = 0; generation < NUMBER_OF_GENERATIONS; generation++) {
-            for (int i = 0; i < NUMBER_OF_GENOMES; i++) {
+            for (int i = 0; i < currentGeneration.size(); i++) {
                 currentGeneration.get(i).score = 0;
                 main.playGame(currentGeneration.get(i));
             }
+//            if (generation == 1) {
+//                System.out.println("GENERATION 2");
+//                for (Snake snek : currentGeneration) {
+//                    System.out.println(snek);
+//                }
+//            }
+
 
             Collections.sort(currentGeneration);
+            ArrayList<Snake> newGeneration = new ArrayList<>();
 
+
+            if (generation == gens - 1) {
+                for (Snake snek : currentGeneration) {
+                    System.out.println(snek);
+                }
+            } else {
+                System.out.println("GENERATION: " + generation);
+            }
 
             // Keep the top batch
-            for (int i = 0; i < NUMBER_OF_GENOMES*(TOP_SPECIES); i++) {
+            for (int i = 0; i < 15; i++) {
                 Snake s = currentGeneration.get(i);
-                newGeneration.add(s);
+                if (generation == 0)
+                newGeneration.add(s.clone());
             }
 
             // Randomize the top batch
-            for (int i = 0; i < NUMBER_OF_GENOMES*(RANDOM_MULTIPLIER); i++) {
-                Snake s = currentGeneration.get(i);
+            for (int i = 0; i < 30; i++) {
+                Snake s = currentGeneration.get(i).clone();
                 s.genome = new Genome(s.genome);
                 newGeneration.add(s);
             }
 
             // Add Randoms
-            for (int i = 0; i < NUMBER_OF_GENOMES*(RANDOM_POPULATION); i++) {
+            for (int i = 0; i < 25; i++) {
                 newGeneration.add(new Snake(new Genome(), new Position(5,5)));
             }
 
-            for (int i = 0; i < RANKS; i++) {
-
-                for (int j = i+1; j < NUMBER_OF_GENOMES*(BREED_TOP)/RANKS; j++) {
-                    newGeneration.add(new Snake(new Genome(currentGeneration.get(i).genome, currentGeneration.get(j).genome) ,new Position(5,5)));
-                }
-            }
-
-            Snake first = currentGeneration.get(0);
-            for (int i = 1; i < NUMBER_OF_GENOMES; i++) {
-                Snake s = currentGeneration.get(i);
+            Snake first = currentGeneration.get(0).clone();
+            for (int i = 1; i < 41; i++) {
+                Snake s = currentGeneration.get(i).clone();
                 s.genome = new Genome(s.genome, first.genome);
                 newGeneration.add(s);
             }

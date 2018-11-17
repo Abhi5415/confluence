@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Game implements Constants {
     char[][] grid;
     Snake snake;

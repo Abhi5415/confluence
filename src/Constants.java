@@ -20,5 +20,5 @@ public interface Constants {
         double RANDOM_MULTIPLIER_UPPER = 1.3;
         double RANDOM_MULTIPLIER_LOWER = 0.7;
 
-        double MAX_MOVES = 500;
+        double MAX_MOVES = 250;
 }

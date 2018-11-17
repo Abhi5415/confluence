@@ -19,6 +19,7 @@ public class Snake implements Comparable {
     public Snake clone() {
         Snake s= new Snake(genome.clone(), original);
         s.snake = new ArrayDeque<>();
+        s.pushPosition(original, true);
 //        s.score = 0;
         return s;
     }

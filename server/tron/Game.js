@@ -28,7 +28,7 @@ class DFS {
     for (let i = 0; i < graph.length; i++) {
       let to_push = [];
       for (let j = 0; j < graph[0].length; j++) {
-        to_push(false);
+        to_push.push(false);
       }
       this.visited.push(to_push);
     }
@@ -37,25 +37,25 @@ class DFS {
   }
 
   dfs() {
-    dfs_driver(start);
-    return counter;
+    this.dfs_driver(this.graph, this.start);
+    return this.counter;
   }
 
   dfs_driver(graph, start) {
     if (start.row < 1 || start.col < 1 || start.row >= 16 || start.col >= 17)
       return;
-    if (visited[start.row][start.col]) return;
+    if (this.visited[start.row][start.col]) return;
     let c = graph[start.row][start.col];
 
     if (c != ".") return;
-    counter++;
+    this.counter++;
 
-    visited[start.row][start.col] = true;
+    this.visited[start.row][start.col] = true;
 
-    dfs(graph, new Bike(start.row - 1, start.col));
-    dfs(graph, new Bike(start.row + 1, start.col));
-    dfs(graph, new Bike(start.row, start.col - 1));
-    dfs(graph, new Bike(start.row, start.col + 1));
+    this.dfs_driver(graph, new Bike(start.row - 1, start.col));
+    this.dfs_driver(graph, new Bike(start.row + 1, start.col));
+    this.dfs_driver(graph, new Bike(start.row, start.col - 1));
+    this.dfs_driver(graph, new Bike(start.row, start.col + 1));
   }
 }
 
@@ -193,68 +193,65 @@ class Genome {
         RANDOM_LOWER_BOUND,
         RANDOM_UPPER_BOUND
       );
-      this.closeRelativeEnemyX = new double[3]();
-      this.closeRelativeEnemyX[0] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.closeRelativeEnemyX = [];
+      this.closeRelativeEnemyX.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.closeRelativeEnemyX[1] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.closeRelativeEnemyX.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.closeRelativeEnemyX[2] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.closeRelativeEnemyX.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.closeRelativeEnemyY = new double[3]();
-      this.closeRelativeEnemyY[0] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.closeRelativeEnemyY = [];
+      this.closeRelativeEnemyY.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.closeRelativeEnemyY[1] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.closeRelativeEnemyY.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.closeRelativeEnemyY[2] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.closeRelativeEnemyY.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
       this.farFreespace = this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND);
       this.farWallDistance = this.random(
         RANDOM_LOWER_BOUND,
         RANDOM_UPPER_BOUND
       );
-      this.farRelativeEnemyX = new double[3]();
-      this.farRelativeEnemyX[0] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.farRelativeEnemyX = [];
+      this.farRelativeEnemyX.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.farRelativeEnemyX[1] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.farRelativeEnemyX.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.farRelativeEnemyX[2] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.farRelativeEnemyX.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.farRelativeEnemyY = new double[3]();
-      this.farRelativeEnemyY[0] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.farRelativeEnemyY = [];
+      this.farRelativeEnemyY.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.farRelativeEnemyY[1] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.farRelativeEnemyY.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
-      this.farRelativeEnemyY[2] = this.random(
-        RANDOM_LOWER_BOUND,
-        RANDOM_UPPER_BOUND
+      this.farRelativeEnemyY.push(
+        this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND)
       );
       this.currDirection = "u";
       this.didWin = false;
       this.length = 0;
       this.farDFS = this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND);
       this.closeDFS = this.random(RANDOM_LOWER_BOUND, RANDOM_UPPER_BOUND);
+    }
+
+    this.grid = [];
+    for (let i = 0; i < 17; i++) {
+      let to_push = [];
+      for (var j = 0; j < 17; j++) {
+        to_push.push(".");
+      }
+      this.grid.push(to_push);
     }
   }
 
@@ -279,8 +276,8 @@ class Genome {
 
     let isFar =
       Math.sqrt(
-        Math.pow(relativeX(myPosition, enemyPosition), 2) +
-          Math.pow(relativeY(myPosition, enemyPosition), 2)
+        Math.pow(this.relativeX(myPosition, enemyPosition), 2) +
+          Math.pow(this.relativeY(myPosition, enemyPosition), 2)
       ) < 6;
 
     let moveL = "s";
@@ -322,49 +319,71 @@ class Genome {
 
     if (isFar) {
       ratingS +=
-        distanceToNearestObstacle(grid, myPosition, currentDirection) *
-        farWallDistance;
+        this.distanceToNearestObstacle(
+          this.grid,
+          this.myPosition,
+          this.currentDirection
+        ) * this.farWallDistance;
       ratingL +=
-        distanceToNearestObstacle(grid, myPosition, moveL) * farWallDistance;
+        this.distanceToNearestObstacle(this.grid, myPosition, moveL) *
+        this.farWallDistance;
       ratingR +=
-        distanceToNearestObstacle(grid, myPosition, moveR) * farWallDistance;
-      ratingS += freeSpacesAtIndex(grid, bikeS) * farFreespace;
-      ratingL += freeSpacesAtIndex(grid, bikeL) * farFreespace;
-      ratingR += freeSpacesAtIndex(grid, bikeR) * farFreespace;
-      ratingS += relativeX(bikeS, enemyPosition) * farRelativeEnemyX[0];
-      ratingL += relativeX(bikeL, enemyPosition) * farRelativeEnemyX[1];
-      ratingR += relativeX(bikeR, enemyPosition) * farRelativeEnemyX[2];
-      ratingS += relativeY(bikeS, enemyPosition) * farRelativeEnemyY[0];
-      ratingL += relativeY(bikeL, enemyPosition) * farRelativeEnemyY[1];
-      ratingR += relativeY(bikeR, enemyPosition) * farRelativeEnemyY[2];
-      ratingS += DFS(bikeS, grid) * farDFS;
-      ratingL += DFS(bikeL, grid) * farDFS;
-      ratingR += DFS(bikeR, grid) * farDFS;
+        this.distanceToNearestObstacle(this.grid, myPosition, moveR) *
+        this.farWallDistance;
+      ratingS += this.freeSpacesAtIndex(this.grid, bikeS) * this.farFreespace;
+      ratingL += this.freeSpacesAtIndex(this.grid, bikeL) * this.farFreespace;
+      ratingR += this.freeSpacesAtIndex(this.grid, bikeR) * this.farFreespace;
+      ratingS +=
+        this.relativeX(bikeS, enemyPosition) * this.farRelativeEnemyX[0];
+      ratingL +=
+        this.relativeX(bikeL, enemyPosition) * this.farRelativeEnemyX[1];
+      ratingR +=
+        this.relativeX(bikeR, enemyPosition) * this.farRelativeEnemyX[2];
+      ratingS +=
+        this.relativeY(bikeS, enemyPosition) * this.farRelativeEnemyY[0];
+      ratingL +=
+        this.relativeY(bikeL, enemyPosition) * this.farRelativeEnemyY[1];
+      ratingR +=
+        this.relativeY(bikeR, enemyPosition) * this.farRelativeEnemyY[2];
+      ratingS += this.DFS(bikeS, this.grid) * this.farDFS;
+      ratingL += this.DFS(bikeL, this.grid) * this.farDFS;
+      ratingR += this.DFS(bikeR, this.grid) * this.farDFS;
     } else {
       ratingS +=
-        distanceToNearestObstacle(grid, myPosition, currentDirection) *
-        closeWallDistance;
+        this.distanceToNearestObstacle(
+          this.grid,
+          myPosition,
+          currentDirection
+        ) * this.closeWallDistance;
       ratingL +=
-        distanceToNearestObstacle(grid, myPosition, moveL) * closeWallDistance;
+        this.distanceToNearestObstacle(this.grid, myPosition, moveL) *
+        this.closeWallDistance;
       ratingR +=
-        distanceToNearestObstacle(grid, myPosition, moveR) * closeWallDistance;
-      ratingS += freeSpacesAtIndex(grid, bikeS) * closeFreespace;
-      ratingL += freeSpacesAtIndex(grid, bikeL) * closeFreespace;
-      ratingR += freeSpacesAtIndex(grid, bikeR) * closeFreespace;
-      ratingS += relativeX(bikeS, enemyPosition) * closeRelativeEnemyX[0];
-      ratingL += relativeX(bikeL, enemyPosition) * closeRelativeEnemyX[1];
-      ratingR += relativeX(bikeR, enemyPosition) * closeRelativeEnemyX[2];
-      ratingS += relativeY(bikeS, enemyPosition) * closeRelativeEnemyY[0];
-      ratingL += relativeY(bikeL, enemyPosition) * closeRelativeEnemyY[1];
-      ratingR += relativeY(bikeR, enemyPosition) * closeRelativeEnemyY[2];
-      ratingS += DFS(bikeS, grid) * closeDFS;
-      ratingL += DFS(bikeL, grid) * closeDFS;
-      ratingR += DFS(bikeR, grid) * closeDFS;
+        this.distanceToNearestObstacle(this.grid, myPosition, moveR) *
+        this.closeWallDistance;
+      ratingS += this.freeSpacesAtIndex(this.grid, bikeS) * this.closeFreespace;
+      ratingL += this.freeSpacesAtIndex(this.grid, bikeL) * this.closeFreespace;
+      ratingR += this.freeSpacesAtIndex(this.grid, bikeR) * this.closeFreespace;
+      ratingS +=
+        this.relativeX(bikeS, enemyPosition) * this.closeRelativeEnemyX[0];
+      ratingL +=
+        this.relativeX(bikeL, enemyPosition) * this.closeRelativeEnemyX[1];
+      ratingR +=
+        this.relativeX(bikeR, enemyPosition) * this.closeRelativeEnemyX[2];
+      ratingS +=
+        this.relativeY(bikeS, enemyPosition) * this.closeRelativeEnemyY[0];
+      ratingL +=
+        this.relativeY(bikeL, enemyPosition) * this.closeRelativeEnemyY[1];
+      ratingR +=
+        this.relativeY(bikeR, enemyPosition) * this.closeRelativeEnemyY[2];
+      ratingS += this.DFS(bikeS, this.grid) * this.closeDFS;
+      ratingL += this.DFS(bikeL, this.grid) * this.closeDFS;
+      ratingR += this.DFS(bikeR, this.grid) * this.closeDFS;
     }
 
-    if (!isValidMove(bikeS, grid)) ratingS -= 200;
-    if (!isValidMove(bikeL, grid)) ratingL -= 200;
-    if (!isValidMove(bikeR, grid)) ratingR -= 200;
+    if (!this.isValidMove(bikeS, this.grid)) ratingS -= 200;
+    if (!this.isValidMove(bikeL, this.grid)) ratingL -= 200;
+    if (!this.isValidMove(bikeR, this.grid)) ratingR -= 200;
 
     if (ratingS >= ratingL && ratingS >= ratingR) {
       return "s";
@@ -381,7 +400,7 @@ class Genome {
 
     if (!(r >= 1 && r <= 15 && c >= 1 && c <= 1)) return false;
 
-    return grid[r][c] == ".";
+    return grid[r][c] === ".";
   }
 
   distanceToNearestObstacle(state, curr, direction) {
@@ -419,14 +438,14 @@ class Genome {
     let x = b.row;
     let y = b.col;
 
-    res = 0;
+    let res = 0;
 
     for (let r = x - 2; r < x + 3; r++) {
       for (let c = y - 2; c < y + 3; c++) {
         // validate bounds
         if (r < 0 || r >= state.length || c < 0 || c >= state.length) continue;
 
-        if (state[r][c] == ".") res++;
+        if (state[r][c] === ".") res++;
       }
     }
 
@@ -444,8 +463,8 @@ class Genome {
 
 class Tron {
   constructor() {
-    setGrid();
     this.grid = [];
+    this.setGrid();
     this.bike1Row = 8;
     this.bike1Column = 2;
     this.bike2Row = 8;
@@ -457,6 +476,7 @@ class Tron {
     this.bike1Length = 0;
     this.bike2Length = 0;
     this.gameOver = false;
+    this.move = " ";
   }
 
   setGrid() {
@@ -467,78 +487,77 @@ class Tron {
       }
       this.grid.push(to_push);
     }
-    grid = new char[17][17]();
-    for (var i = 0; i < grid.length; i++) {
-      for (var j = 0; j < grid[0].length; j++) {
-        grid[i][j] = ".";
+    for (var i = 0; i < this.grid.length; i++) {
+      for (var j = 0; j < this.grid[0].length; j++) {
+        this.grid[i][j] = ".";
       }
     }
     for (var i = 0; i < 17; i++) {
-      grid[0][i] = "w";
-      grid[i][0] = "w";
-      grid[16][i] = "w";
-      grid[i][16] = "w";
+      this.grid[0][i] = "w";
+      this.grid[i][0] = "w";
+      this.grid[16][i] = "w";
+      this.grid[i][16] = "w";
     }
     let s = new Bike(8, 14);
     let p = new Bike(8, 2);
-    grid[s.row][s.col] = "p";
-    grid[p.row][p.col] = "s";
+    this.grid[s.row][s.col] = "p";
+    this.grid[p.row][p.col] = "s";
   }
 
-  isValidMove(row, column, move, direction, grid) {
-    if (direction == "u") {
-      if (move == "l") {
-        if (grid[row][column - 1] != ".") {
+  isValidMove(row, column, direction) {
+    if (direction === "u") {
+      if (this.move === "l") {
+        if (this.grid[row][column - 1] != ".") {
           return false;
         }
-      } else if (move == "r") {
-        if (grid[row][column + 1] != ".") {
+      } else if (this.move === "r") {
+        if (this.grid[row][column + 1] != ".") {
           return false;
         }
-      } else if (move == "s") {
-        if (grid[row - 1][column] != ".") {
-          return false;
-        }
-      }
-    } else if (direction == "d") {
-      if (move == "l") {
-        if (grid[row][column + 1] != ".") {
-          return false;
-        }
-      } else if (move == "r") {
-        if (grid[row][column - 1] != ".") {
-          return false;
-        }
-      } else if (move == "s") {
-        if (grid[row + 1][column] != ".") {
+      } else if (this.move === "s") {
+        if (this.grid[row - 1][column] != ".") {
           return false;
         }
       }
-    } else if (direction == "l") {
-      if (move == "l") {
-        if (grid[row + 1][column] != ".") {
+    } else if (direction === "d") {
+      if (this.move === "l") {
+        if (this.grid[row][column + 1] != ".") {
           return false;
         }
-      } else if (move == "r") {
-        if (grid[row - 1][column] != ".") {
+      } else if (this.move === "r") {
+        if (this.grid[row][column - 1] != ".") {
           return false;
         }
-      } else if (move == "s") {
-        if (grid[row][column - 1] != ".") {
+      } else if (this.move === "s") {
+        if (this.grid[row + 1][column] != ".") {
           return false;
         }
       }
-    } else if (direction == "r") {
-      if (move == "l") {
-        if (grid[row - 1][column] != ".") {
+    } else if (direction === "l") {
+      if (this.move === "l") {
+        if (this.grid[row + 1][column] != ".") {
           return false;
         }
-      } else if (move == "r") {
-        if (grid[row + 1][column] != ".") {
+      } else if (this.move === "r") {
+        if (this.grid[row - 1][column] != ".") {
           return false;
         }
-      } else if (move == "s") {
-        if (grid[row][column + 1] != ".") {
+      } else if (this.move === "s") {
+        if (this.grid[row][column - 1] != ".") {
+          return false;
+        }
+      }
+    } else if (direction === "r") {
+      if (this.move === "l") {
+        if (this.grid[row - 1][column] != ".") {
+          return false;
+        }
+      } else if (this.move === "r") {
+        if (this.grid[row + 1][column] != ".") {
+          return false;
+        }
+      } else if (this.move === "s") {
+        if (this.grid[row][column + 1] != ".") {
           return false;
         }
       }
@@ -546,188 +565,155 @@ class Tron {
     return true;
   }
 
-  printGrid(grid) {
-    for (var i = 0; i < grid.length; i++) {
-      for (var j = 0; j < grid[0].length; j++) {
-        System.out.print(" " + grid[i][j] + " ");
-      }
-      System.out.println();
-    }
-  }
-
   makeMove(firstMove, secondMove) {
+    this.move = firstMove;
     if (
-      !bike1Dead &&
-      isValidMove(bike1Row, bike1Column, firstMove, bike1Direction, grid)
+      !this.bike1Dead &&
+      this.isValidMove(this.bike1Row, this.bike1Column, this.bike1Direction)
     ) {
-      bike1Length++;
-      if (bike1Direction == "u") {
-        if (firstMove == "l") {
-          grid[bike1Row][bike1Column - 1] = "s";
-          bike1Column -= 1;
-          bike1Direction = "l";
-        } else if (firstMove == "r") {
-          grid[bike1Row][bike1Column + 1] = "s";
-          bike1Column += 1;
-          bike1Direction = "r";
-        } else if (firstMove == "s") {
-          grid[bike1Row - 1][bike1Column] = "s";
-          bike1Row -= 1;
+      this.bike1Length++;
+      if (this.bike1Direction === "u") {
+        if (firstMove === "l") {
+          this.grid[this.bike1Row][this.bike1Column - 1] = "s";
+          this.bike1Column -= 1;
+          this.bike1Direction = "l";
+        } else if (firstMove === "r") {
+          this.grid[this.bike1Row][this.bike1Column + 1] = "s";
+          this.bike1Column += 1;
+          this.bike1Direction = "r";
+        } else if (firstMove === "s") {
+          this.grid[this.bike1Row - 1][this.bike1Column] = "s";
+          this.bike1Row -= 1;
         }
-      } else if (bike1Direction == "d") {
-        if (firstMove == "l") {
-          grid[bike1Row][bike1Column + 1] = "s";
-          bike1Column += 1;
-          bike1Direction = "r";
-        } else if (firstMove == "r") {
-          grid[bike1Row][bike1Column - 1] = "s";
-          bike1Column -= 1;
-          bike1Direction = "l";
-        } else if (firstMove == "s") {
-          grid[bike1Row + 1][bike1Column] = "s";
-          bike1Row += 1;
+      } else if (this.bike1Direction === "d") {
+        if (firstMove === "l") {
+          this.grid[this.bike1Row][this.bike1Column + 1] = "s";
+          this.bike1Column += 1;
+          this.bike1Direction = "r";
+        } else if (firstMove === "r") {
+          this.grid[this.bike1Row][this.bike1Column - 1] = "s";
+          this.bike1Column -= 1;
+          this.bike1Direction = "l";
+        } else if (firstMove === "s") {
+          this.grid[this.bike1Row + 1][this.bike1Column] = "s";
+          this.bike1Row += 1;
         }
-      } else if (bike1Direction == "l") {
-        if (firstMove == "l") {
-          grid[bike1Row + 1][bike1Column] = "s";
-          bike1Row += 1;
-          bike1Direction = "d";
-        } else if (firstMove == "r") {
-          grid[bike1Row - 1][bike1Column] = "s";
-          bike1Row -= 1;
-          bike1Direction = "u";
-        } else if (firstMove == "s") {
-          grid[bike1Row][bike1Column - 1] = "s";
-          bike1Column -= 1;
+      } else if (this.bike1Direction === "l") {
+        if (firstMove === "l") {
+          this.grid[this.bike1Row + 1][this.bike1Column] = "s";
+          this.bike1Row += 1;
+          this.bike1Direction = "d";
+        } else if (firstMove === "r") {
+          this.grid[this.bike1Row - 1][this.bike1Column] = "s";
+          this.bike1Row -= 1;
+          this.bike1Direction = "u";
+        } else if (firstMove === "s") {
+          this.grid[this.bike1Row][this.bike1Column - 1] = "s";
+          this.bike1Column -= 1;
         }
-      } else if (bike1Direction == "r") {
-        if (firstMove == "l") {
-          grid[bike1Row - 1][bike1Column] = "s";
-          bike1Row -= 1;
-          bike1Direction = "u";
-        } else if (firstMove == "r") {
-          grid[bike1Row + 1][bike1Column] = "s";
-          bike1Row += 1;
-          bike1Direction = "d";
-        } else if (firstMove == "s") {
-          grid[bike1Row][bike1Column + 1] = "s";
-          bike1Column += 1;
+      } else if (this.bike1Direction === "r") {
+        if (firstMove === "l") {
+          this.grid[this.bike1Row - 1][this.bike1Column] = "s";
+          this.bike1Row -= 1;
+          this.bike1Direction = "u";
+        } else if (firstMove === "r") {
+          this.grid[this.bike1Row + 1][this.bike1Column] = "s";
+          this.bike1Row += 1;
+          this.bike1Direction = "d";
+        } else if (firstMove === "s") {
+          this.grid[this.bike1Row][this.bike1Column + 1] = "s";
+          this.bike1Column += 1;
         }
       }
     } else {
-      bike1Dead = true;
+      this.bike1Dead = true;
     }
 
+    this.move = secondMove;
+
     if (
-      !bike2Dead &&
-      isValidMove(bike2Row, bike2Column, secondMove, bike2Direction, grid)
+      !this.bike2Dead &&
+      this.isValidMove(this.bike2Row, this.bike2Column, this.bike2Direction)
     ) {
-      bike2Length++;
-      if (bike2Direction == "u") {
-        if (secondMove == "l") {
-          grid[bike2Row][bike2Column - 1] = "p";
-          bike2Column -= 1;
-          bike2Direction = "l";
-        } else if (secondMove == "r") {
-          grid[bike2Row][bike2Column + 1] = "p";
-          bike2Column += 1;
-          bike2Direction = "r";
-        } else if (secondMove == "s") {
-          grid[bike2Row - 1][bike2Column] = "p";
-          bike2Row -= 1;
+      this.bike2Length++;
+      if (this.bike2Direction === "u") {
+        if (secondMove === "l") {
+          this.grid[this.bike2Row][this.bike2Column - 1] = "p";
+          this.bike2Column -= 1;
+          this.bike2Direction = "l";
+        } else if (secondMove === "r") {
+          this.grid[this.bike2Row][this.bike2Column + 1] = "p";
+          this.bike2Column += 1;
+          this.bike2Direction = "r";
+        } else if (secondMove === "s") {
+          this.grid[this.bike2Row - 1][this.bike2Column] = "p";
+          this.bike2Row -= 1;
         }
-      } else if (bike2Direction == "d") {
-        if (secondMove == "l") {
-          grid[bike2Row][bike2Column + 1] = "p";
-          bike2Column += 1;
-          bike2Direction = "r";
-        } else if (secondMove == "r") {
-          grid[bike2Row][bike2Column - 1] = "p";
-          bike2Column -= 1;
-          bike2Direction = "l";
-        } else if (secondMove == "s") {
-          grid[bike2Row + 1][bike2Column] = "p";
-          bike2Row += 1;
+      } else if (this.bike2Direction === "d") {
+        if (secondMove === "l") {
+          this.grid[this.bike2Row][this.bike2Column + 1] = "p";
+          this.bike2Column += 1;
+          this.bike2Direction = "r";
+        } else if (secondMove === "r") {
+          this.grid[this.bike2Row][this.bike2Column - 1] = "p";
+          this.bike2Column -= 1;
+          this.bike2Direction = "l";
+        } else if (secondMove === "s") {
+          this.grid[this.bike2Row + 1][this.bike2Column] = "p";
+          this.bike2Row += 1;
         }
-      } else if (bike2Direction == "l") {
-        if (secondMove == "l") {
-          grid[bike2Row + 1][bike2Column] = "p";
-          bike2Row += 1;
-          bike2Direction = "d";
-        } else if (secondMove == "r") {
-          grid[bike2Row - 1][bike2Column] = "p";
-          bike2Row -= 1;
-          bike2Direction = "u";
-        } else if (secondMove == "s") {
-          grid[bike2Row][bike2Column - 1] = "p";
-          bike2Column -= 1;
+      } else if (this.bike2Direction === "l") {
+        if (secondMove === "l") {
+          this.grid[this.bike2Row + 1][this.bike2Column] = "p";
+          this.bike2Row += 1;
+          this.bike2Direction = "d";
+        } else if (secondMove === "r") {
+          this.grid[this.bike2Row - 1][this.bike2Column] = "p";
+          this.bike2Row -= 1;
+          this.bike2Direction = "u";
+        } else if (secondMove === "s") {
+          this.grid[this.bike2Row][this.bike2Column - 1] = "p";
+          this.bike2Column -= 1;
         }
-      } else if (bike2Direction == "r") {
-        if (secondMove == "l") {
-          grid[bike2Row - 1][bike2Column] = "p";
-          bike2Row -= 1;
-          bike2Direction = "u";
-        } else if (secondMove == "r") {
-          grid[bike2Row + 1][bike2Column] = "p";
-          bike2Row += 1;
-          bike2Direction = "d";
-        } else if (secondMove == "s") {
-          grid[bike2Row][bike2Column + 1] = "p";
-          bike2Column += 1;
+      } else if (this.bike2Direction === "r") {
+        if (secondMove === "l") {
+          this.grid[this.bike2Row - 1][this.bike2Column] = "p";
+          this.bike2Row -= 1;
+          this.bike2Direction = "u";
+        } else if (secondMove === "r") {
+          this.grid[this.bike2Row + 1][this.bike2Column] = "p";
+          this.bike2Row += 1;
+          this.bike2Direction = "d";
+        } else if (secondMove === "s") {
+          this.grid[this.bike2Row][this.bike2Column + 1] = "p";
+          this.bike2Column += 1;
         }
       }
     } else {
-      bike2Dead = true;
+      this.bike2Dead = true;
     }
-    if (bike1Dead && bike2Dead) gameOver = true;
+    if (this.bike1Dead && this.bike2Dead) this.gameOver = true;
   }
 
   returnWinner(g1, g2) {
-    while (!gameOver) {
+    while (!this.gameOver) {
       let move1 = g1.nextMove(
-        grid,
-        new Bike(bike1Row, bike1Column),
-        new Bike(bike2Row, bike2Column),
-        bike1Direction
+        this.grid,
+        new Bike(this.bike1Row, this.bike1Column),
+        new Bike(this.bike2Row, this.bike2Column),
+        this.bike1Direction
       );
       let move2 = g2.nextMove(
-        grid,
-        new Bike(bike2Row, bike2Column),
-        new Bike(bike1Row, bike1Column),
-        bike2Direction
+        this.grid,
+        new Bike(this.bike2Row, this.bike2Column),
+        new Bike(this.bike1Row, this.bike1Column),
+        this.bike2Direction
       );
-      makeMove(move1, move2);
+      this.makeMove(move1, move2);
     }
-    g1.length = bike1Length;
-    g2.length = bike2Length;
+    g1.length = this.bike1Length;
+    g2.length = this.bike2Length;
     let result = new Result(
-      g1.length > g2.length ? g1 : g2,
-      g2.length < g1.length ? g2 : g1
-    );
-    return result;
-  }
-
-  returnWinnerVerbose(g1, g2) {
-    while (!gameOver) {
-      let move1 = g1.nextMove(
-        grid,
-        new Bike(bike1Row, bike1Column),
-        new Bike(bike2Row, bike2Column),
-        bike1Direction
-      );
-      let move2 = g2.nextMove(
-        grid,
-        new Bike(bike2Row, bike2Column),
-        new Bike(bike1Row, bike1Column),
-        bike2Direction
-      );
-      makeMove(move1, move2);
-      printGrid(grid);
-    }
-
-    g1.length = bike1Length;
-    g2.length = bike2Length;
-    result = new Result(
       g1.length > g2.length ? g1 : g2,
       g2.length < g1.length ? g2 : g1
     );
@@ -735,4 +721,8 @@ class Tron {
   }
 }
 
-new Genome();
+module.exports = {
+  Genome,
+  Bike,
+  Tron
+};

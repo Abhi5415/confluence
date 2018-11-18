@@ -3,12 +3,6 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 
-// app.use(express.static(__dirname + "/bower_components"));
-
-// app.get("/", function(req, res, next) {
-//   res.sendFile(__dirname + "/index.html");
-// });
-
 const createWork = () => {
   const data = [];
 
@@ -27,10 +21,27 @@ const createWork = () => {
   };
 };
 
+let userCount = 0;
+let progressBar = 5;
+
+// setInterval(() => {
+//   if (progressBar >= 100) return;
+//   progressBar += parseInt(Math.random() * 5);
+//   io.sockets.emit("progressUpdate", ++progressBar);
+// }, Math.random() * 300);
+
 io.on("connection", client => {
+  io.sockets.emit("userUpdate", ++userCount);
+  io.sockets.emit("progressUpdate", progressBar);
+
   client.on("requestWork", data => {
     const parcel = createWork();
     client.emit("updateWorkStatus", { parcel });
+    client.on("doneWork", data => console.log(data));
+  });
+
+  client.on("disconnect", () => {
+    io.sockets.emit("userUpdate", --userCount);
   });
 });
 

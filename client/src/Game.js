@@ -720,8 +720,4 @@ class Tron {
   }
 }
 
-module.exports = {
-  Genome,
-  Bike,
-  Tron
-};
+export { Genome, Bike, Tron };

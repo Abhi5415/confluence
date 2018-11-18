@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Button, Progress } from "antd";
+import { Tron, Genome } from "./Game";
 
 import io from "socket.io-client";
 
@@ -11,25 +12,67 @@ export default class App extends Component {
     this.socket = io(endpoint);
     this.state = {
       usersOnline: 0,
-      progress: 0
+      myProgress: 0,
+      currentGenerationProgress: 0
     };
   }
 
-  compute = parcel => {
-    console.log("received parcel", parcel);
-    const fcn = eval(parcel.parcel.function);
-    let computed = [];
-    parcel.parcel.data.forEach(dataPoint => {
-      computed.push(fcn(dataPoint.farRange));
-    });
-    this.socket.emit("doneWork", computed);
-  };
+  execute() {
+    this.socket.emit("execute");
+  }
 
-  requestWork = () => {
-    // console.log("requesting work");
-    this.socket.emit("requestWork", 1000);
-    this.socket.on("updateWorkStatus", parcel => this.compute(parcel));
-  };
+  playGame(g1, g2) {
+    let fixedG1 = new Genome();
+    let fixedG2 = new Genome();
+
+    fixedG1.loseFreespace = g1.loseFreespace;
+    fixedG1.closeWallDistance = g1.closeWallDistance;
+    fixedG1.closeRelativeEnemyX = g1.closeRelativeEnemyX;
+    fixedG1.closeRelativeEnemyY = g1.closeRelativeEnemyY;
+    fixedG1.farFreespace = g1.farFreespace;
+    fixedG1.farWallDistance = g1.farWallDistance;
+    fixedG1.farRelativeEnemyX = g1.farRelativeEnemyX;
+    fixedG1.farRelativeEnemyY = g1.farRelativeEnemyY;
+    fixedG1.currDirection = g1.currDirection;
+    fixedG1.didWin = false;
+    fixedG1.length = 0;
+    fixedG1.farDFS = g1.farDFS;
+    fixedG1.closeDFS = g1.closeDFS;
+
+    fixedG2.loseFreespace = g2.loseFreespace;
+    fixedG2.closeWallDistance = g2.closeWallDistance;
+    fixedG2.closeRelativeEnemyX = g2.closeRelativeEnemyX;
+    fixedG2.closeRelativeEnemyY = g2.closeRelativeEnemyY;
+    fixedG2.farFreespace = g2.farFreespace;
+    fixedG2.farWallDistance = g2.farWallDistance;
+    fixedG2.farRelativeEnemyX = g2.farRelativeEnemyX;
+    fixedG2.farRelativeEnemyY = g2.farRelativeEnemyY;
+    fixedG2.currDirection = g2.currDirection;
+    fixedG2.didWin = false;
+    fixedG2.length = 0;
+    fixedG2.farDFS = g2.farDFS;
+    fixedG2.closeDFS = g2.closeDFS;
+
+    let tron = new Tron();
+    return tron.returnWinner(fixedG1, fixedG2);
+  }
+
+  compute(data) {
+    const { genomes } = data;
+    let computed = [];
+
+    for (let i = 0; i < genomes.length; i += 2) {
+      let r = this.playGame(genomes[i], genomes[i + 1]);
+      computed.push(r.loser);
+      computed.push(r.winner);
+    }
+    console.log(`Done ${computed.length} tasks.`);
+    console.log("Emitting data");
+    setTimeout(
+      () => this.socket.emit("doneWork", computed),
+      Math.random() * 5000
+    );
+  }
 
   componentDidMount() {
     this.socket.on("userUpdate", usersOnline => {
@@ -37,25 +80,30 @@ export default class App extends Component {
         usersOnline
       });
     });
-    this.socket.on("progressUpdate", progress => {
-      this.setState({
-        progress
-      });
-    });
+
+    this.socket.on(
+      "currentGenerationProgressUpdate",
+      currentGenerationProgress => {
+        this.setState({
+          currentGenerationProgress
+        });
+      }
+    );
+
+    this.socket.on("assignWork", data => this.compute(data));
   }
 
   render() {
+    const { currentGenerationProgress } = this.state;
+    const done = currentGenerationProgress > 97;
     return (
       <div>
         <h1>Users online: {this.state.usersOnline}</h1>
-        <Button type="dashed" onClick={() => this.requestWork()}>
-          Connect to Server
+        <Button type="dashed" onClick={() => this.execute()}>
+          Execute Task
         </Button>
-        <h3>Calculation Progress</h3>
-        <Progress
-          percent={this.state.progress}
-          status={this.state.progress < 100 ? "active" : ""}
-        />
+        <Progress percent={this.state.myProgress} />
+        <Progress percent={done ? 100 : currentGenerationProgress} />
       </div>
     );
   }

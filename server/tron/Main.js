@@ -11,6 +11,45 @@ const random = (low, high) => {
   return parseInt(Math.random() * (high - low)) + 1;
 };
 
+const nodes = 5;
+
+const f = `x => x - Math.sin(x)`;
+
+const batch = currentGeneration => {
+  let sizePerBatch = Math.ceil(currentGeneration.length / nodes);
+
+  let batches = [];
+
+  for (let i = 0; i < nodes; i++) {
+    let batch = [];
+    for (let j = 0; j < sizePerBatch; j++) {
+      batch.push(currentGeneration[j]);
+    }
+    batches.push(batch);
+  }
+
+  return batches;
+};
+
+const calculateBatches = batches =>
+  new Promise((resolve, reject) => {
+    let calculated = [];
+
+    // send to all nodes
+    let clients = io.sockets.clients();
+
+    clients.forEach(client => {
+      client.emit(
+        "updateWorkStatus",
+        { data: batches, function: f },
+        (callback = calculatedComponent => calculated.push(calculatedComponent))
+      );
+    });
+
+    // wait for everone to finish
+    resolve();
+  });
+
 grid = [];
 for (let i = 0; i < 17; i++) {
   let to_push = [];
@@ -40,14 +79,20 @@ grid[p.row][p.col] = "p";
 
 currentGeneration = [];
 
-// make initial generation
 for (let i = 0; i < 10000; i++) {
   currentGeneration.push(new Genome());
 }
 
-for (let generation = 0; generation < 50; generation++) {
-  console.log("Generation " + generation);
+let batches = batch(currentGeneration);
+calculateBatches(batches)
+  .then(() => console.log("Done"))
+  .catch(err => console.log("Error: ", err));
+
+let genCap = 0;
+// let genCap = 50;
+for (let generation = 0; generation < genCap; generation++) {
   newGeneration = [];
+
   for (let i = 0; i < currentGeneration.length; i += 2) {
     let r = playGame(currentGeneration[i], currentGeneration[i + 1]);
 
@@ -64,12 +109,6 @@ for (let generation = 0; generation < 50; generation++) {
     if (a.length > b.length) return -1;
     return 0;
   });
-
-  if (generation == 2) {
-    for (let i = 0; i < 50; i++) {
-      console.log(newGeneration[i].length);
-    }
-  }
 
   currentGeneration = [];
   for (let i = 0; i < 1500; i++) {

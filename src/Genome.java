@@ -66,9 +66,8 @@ public class Genome implements Constants{
     public Genome(Genome g1, Genome g2) {
         // ------ constant for game -----
         this.currentDirection = ' ';
-        foodPositionX = new double[3];
-        foodPositionY = new double[3];
-
+        this.foodPositionX = new double[3];
+        this.foodPositionY = new double[3];
         // ------ initializing genome population ------
         this.wallDistance = random(g1.wallDistance, g2.wallDistance);
         this.freeSpace = random(g1.freeSpace , g2.freeSpace);
@@ -81,13 +80,33 @@ public class Genome implements Constants{
     public Genome(Genome g){
         // ------ constant for game -----
         this.currentDirection = ' ';
-        foodPositionX = new double[3];
-        foodPositionY = new double[3];
+        this.foodPositionX = new double[3];
+        this.foodPositionY = new double[3];
         // ------ initializing genome population ------
         this.wallDistance = g.wallDistance * random(RANDOM_MULTIPLIER_LOWER, RANDOM_MULTIPLIER_UPPER);
         this.freeSpace = g.wallDistance * random(RANDOM_MULTIPLIER_LOWER, RANDOM_MULTIPLIER_UPPER);
         randomizeSuccess(3, this.foodPositionX, g.foodPositionX, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
         randomizeSuccess(3, this.foodPositionY, g.foodPositionY, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
+//        randomizeSuccess(11, this.vision, g.vision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
+//        randomizeSuccess(11, this.foodVision, g.foodVision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
+    }
+
+    public Genome(char a){
+        // ------ constant for game -----
+        this.currentDirection = 'a';
+        this.foodPositionX = new double[3];
+        this.foodPositionY = new double[3];
+        this.foodPositionX[0] = 2;
+        this.foodPositionX[1] = 2;
+        this.foodPositionX[2] = 2;
+
+        this.foodPositionY[0] = 2;
+        this.foodPositionY[1] = 2;
+        this.foodPositionY[2] = 2;
+
+        // ------ initializing genome population ------
+        this.wallDistance = 0.2;
+        this.freeSpace = 0.2;
 //        randomizeSuccess(11, this.vision, g.vision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
 //        randomizeSuccess(11, this.foodVision, g.foodVision, RANDOM_MULTIPLIER_UPPER, RANDOM_MULTIPLIER_LOWER);
     }

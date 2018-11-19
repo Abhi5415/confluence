@@ -17,9 +17,15 @@ const columns = [{
 
 
 const data = [];
-function pushData(id, deviceType, status) {
+function pushData(id, deviceType) {
     id.forEach((id) => data.push({id: id[id], deviceType: deviceType[id], status:"ready"}))
 }
 
+const nodeList = (props) => {
+    return(
+        <Table columns={columns} dataSource={data} />
+    )
+}
 
-ReactDOM.render(<Table columns={columns} dataSource={data} />, mountNode);
+export default nodeList;
+

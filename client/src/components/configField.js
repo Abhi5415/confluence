@@ -5,7 +5,7 @@ const configField = (props) => {
   if (props.format == '%'){
     return(
       <div> 
-        <h1>{props.fieldName}</h1>
+        <h3>{props.fieldName}</h3>
         <InputNumber
         defaultValue={100}
         min={0}
@@ -19,7 +19,7 @@ const configField = (props) => {
   } else {
     return(
       <div> 
-        <h1>{props.fieldName}</h1>
+        <h3>{props.fieldName}</h3>
         <InputNumber min={0} max={100000000000000} defaultValue={props.defaultValue} />
       </div>
     )

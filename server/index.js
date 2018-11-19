@@ -75,7 +75,7 @@ io.on("connection", client => {
       `Received ${data.length} computations from client ${client.id}.`
     );
     console.log(`Total calculations received: ${currentData.length}.`);
-    if (currentData.length >= targetDataSize) {
+    if (currentData.length >= targetDataSize * 0.97) {
       console.log(
         `Achieved computation target of ${targetDataSize}. Going to next generation.`
       );

@@ -203,7 +203,7 @@ io.on("connection", client => {
       }
 
       console.log(`Successfully prepared generation ${generation}.`);
-      consoleLogs.push(`Preparing generation ${generation}.`);
+      consoleLogs.push(`Successfully prepared generation ${generation}.`);
       io.sockets.emit("logUpdate", consoleLogs);
 
       // send data out to clients

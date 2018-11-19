@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Row, Col, Input, Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Input, Layout, Menu, Progress } from "antd";
 import NodesTable from "../components/NodesTable";
 import ParameterList from "../components/ParameterList";
+import ScoreChart from "../components/ScoreChart";
 const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
-
 const { TextArea } = Input;
 
 export default class Admin extends Component {
@@ -12,8 +11,13 @@ export default class Admin extends Component {
     super(props);
     this.state = {
       clientIds: 0,
-      executedButton: false
+      executedButton: false,
+      dataPoints: [],
+      generation: 0,
+      logs: [],
+      progressPercentage: 0
     };
+    this.state.dataPoints.push(0);
   }
 
   componentWillMount() {
@@ -24,6 +28,33 @@ export default class Admin extends Component {
       });
       console.log(clientIds);
     });
+
+    socket.on("dataPointsUpdate", dataPoints => {
+      this.setState({
+        dataPoints
+      });
+    });
+
+    socket.on("currentGenerationProgressUpdate", progressPercentage => {
+      this.setState({
+        progressPercentage
+      });
+    });
+
+    socket.on("logUpdate", logs => {
+      this.setState({
+        logs
+      });
+    });
+  }
+
+  formatData() {
+    const { logs } = this.state;
+    let str = "";
+    for (let i = 0; i < logs.length; i++) {
+      str += logs[i] + "\n";
+    }
+    return str;
   }
 
   render() {
@@ -52,7 +83,6 @@ export default class Admin extends Component {
                 </Menu.Item>
               </Menu>
             </Header>
-
             <Content style={{ padding: "0 0px" }}>
               <Layout style={{ padding: "24px 24px", background: "#fff" }}>
                 <Sider width={600} style={{ background: "#fff" }}>
@@ -71,7 +101,40 @@ export default class Admin extends Component {
             </Content>
           </div>
         ) : (
-          <h1>Test</h1>
+          <div>
+            <Header>
+              <Menu
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={["2"]}
+                style={{ lineHeight: "64px" }}
+              >
+                <Progress
+                  percent={this.state.progressPercentage}
+                  style={{ width: 1330 }}
+                />
+              </Menu>
+            </Header>
+            <Content style={{ padding: "0 0px" }}>
+              <Layout style={{ padding: "24px 24px", background: "#fff" }}>
+                <Sider width={600} style={{ background: "#fff" }}>
+                  <h1>Nodes Connected: {this.state.clientIds.length}</h1>
+                  <NodesTable rawData={this.state.clientIds} />
+                  <ScoreChart points={this.state.dataPoints} />
+                </Sider>
+                <Content style={{ padding: "0 24px", minHeight: 280 }}>
+                  <h1>Simulation</h1>
+
+                  <h1>Console Logs</h1>
+                  <TextArea
+                    rows={20}
+                    value={this.formatData()}
+                    placeholder={`const f = (x, y) => Math.sqrt(x * x + y * y);`}
+                  />
+                </Content>
+              </Layout>
+            </Content>
+          </div>
         )}
 
         <Footer style={{ textAlign: "center" }}>

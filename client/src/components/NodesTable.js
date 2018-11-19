@@ -16,7 +16,9 @@ const columns = [
     title: "Status",
     dataIndex: "status",
     key: "status",
-    render: text => <Tag color="green">{text}</Tag>
+    render: text => (
+      <Tag color={text === "Working" ? "orange" : "green"}>{text}</Tag>
+    )
   }
 ];
 
@@ -30,7 +32,7 @@ const NodesTable = ({ rawData }) => {
       data = rawData.map(raw => ({
         id: raw.id,
         browser: raw.userAgent.split(" ")[0],
-        status: "Ready"
+        status: raw.status
       }));
     }
   }

@@ -14,6 +14,9 @@ let timeInitial;
 let timeFinal;
 let currentGeneration = [];
 let generation = 0;
+let dataPoints = [];
+let consoleLogs = [];
+dataPoints.push(0);
 
 const random = (low, high) => {
   return parseInt(Math.random() * (high - low)) + 1;
@@ -45,10 +48,18 @@ const calculateBatches = batches =>
       console.log(
         `Emitted batch task to ${clientId.id} of length ${batches[i].length}.`
       );
+      consoleLogs.push(
+        `Emitted batch task to ${clientId.id} of length ${batches[i].length}.`
+      );
+
+      io.sockets.emit("logUpdate", consoleLogs);
       io.sockets.connected[clientId.id].emit("assignWork", {
         genomes: batches[i++],
         function: "this is a function"
       });
+      clientId.status = "Working";
+      io.sockets.emit("userUpdate", clientIds);
+      // TODO
     });
     resolve();
   });
@@ -60,16 +71,33 @@ for (let i = 0; i < 10000; i++) {
 io.on("connection", client => {
   clientIds.push({
     id: client.id,
-    userAgent: client.request.headers["user-agent"]
+    userAgent: client.request.headers["user-agent"],
+    status: "Ready"
   });
+  client.emit("updateUUID", client.id);
   ++userCount;
   io.sockets.emit("userUpdate", clientIds);
 
   client.on("execute", () => {
+    let index = -1;
+    const compareId = client.id;
+    clientIds.forEach((client, i) => {
+      if (client.id === compareId) {
+        index = i;
+      }
+    });
+    --userCount;
+    clientIds.splice(index, 1);
+
     timeInitial = now();
     let batches = batch(currentGeneration);
+
     calculateBatches(batches)
-      .then(succes => console.log("Successfully sent all batches."))
+      .then(succes => {
+        console.log("Successfully sent all batches.");
+        consoleLogs.push("Successfully sent all batches.");
+        io.sockets.emit("logUpdate", consoleLogs);
+      })
       .catch(err => console.log(err));
   });
 
@@ -78,11 +106,33 @@ io.on("connection", client => {
     console.log(
       `Received ${data.length} computations from client ${client.id}.`
     );
+    consoleLogs.push(
+      `Received ${data.length} computations from client ${client.id}.`
+    );
+
+    let index = -1;
+    clientIds.forEach((client, i) => {
+      if (client.id === client.id) {
+        index = i;
+      }
+    });
+
+    clientIds[index].status = "Ready";
+    io.sockets.emit("userUpdate", clientIds);
+
     console.log(`Total calculations received: ${currentData.length}.`);
+    consoleLogs.push(`Total calculations received: ${currentData.length}.`);
+
+    io.sockets.emit("logUpdate", consoleLogs);
     if (currentData.length >= targetDataSize * 0.97) {
       console.log(
         `Achieved computation target of ${targetDataSize}. Going to next generation.`
       );
+
+      consoleLogs.push(
+        `Achieved computation target of ${targetDataSize}. Going to next generation.`
+      );
+      io.sockets.emit("logUpdate", consoleLogs);
 
       // process data for next generation
       currentData.sort((a, b) => {
@@ -91,14 +141,27 @@ io.on("connection", client => {
         return 0;
       });
 
+      dataPoints.push(currentData[0].length);
+      io.sockets.emit("dataPointsUpdate", dataPoints);
+
       if (generation == targetGeneration) {
+        io.sockets.emit("currentGenerationProgressUpdate", 100);
+
         timeFinal = now();
         console.log(`Achieved target generation of ${targetGeneration}.`);
         console.log(`Completed task in ${timeFinal - timeInitial} ms.`);
-
-        // list top genomes
         console.log("Listening top genome lengths:");
-        for (let i = 0; i < 5; i++) console.log(currentData[i].length);
+
+        consoleLogs.push(`Achieved target generation of ${targetGeneration}.`);
+        consoleLogs.push(`Completed task in ${timeFinal - timeInitial} ms.`);
+        consoleLogs.push("Listening top genome lengths:");
+
+        for (let i = 0; i < 5; i++) {
+          consoleLogs.push(currentData[i].length);
+          console.log(currentData[i].length);
+        }
+
+        io.sockets.emit("logUpdate", consoleLogs);
 
         return;
       }
@@ -107,10 +170,12 @@ io.on("connection", client => {
 
       io.sockets.emit(
         "currentGenerationProgressUpdate",
-        (100 * generation) / targetGeneration
+        (100 * generation) / (targetGeneration + 1)
       );
 
       console.log(`Preparing generation ${generation}.`);
+      consoleLogs.push(`Preparing generation ${generation}.`);
+      io.sockets.emit("logUpdate", consoleLogs);
 
       let newGeneration = [];
       for (let i = 0; i < 1500; i++) newGeneration.push(currentData[i]);
@@ -138,12 +203,18 @@ io.on("connection", client => {
       }
 
       console.log(`Successfully prepared generation ${generation}.`);
+      consoleLogs.push(`Preparing generation ${generation}.`);
+      io.sockets.emit("logUpdate", consoleLogs);
 
       // send data out to clients
       let batches = batch(newGeneration);
 
       calculateBatches(batches)
-        .then(succes => console.log("Successfully sent all batches."))
+        .then(succes => {
+          console.log("Successfully sent all batches.");
+          consoleLogs.push("Successfully sent all batches.");
+          io.sockets.emit("logUpdate", consoleLogs);
+        })
         .catch(err => console.log(err));
       currentData = [];
     }

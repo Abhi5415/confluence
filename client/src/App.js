@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Button, Progress } from "antd";
 import { Tron, Genome } from "./Game";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import Worker from "./pages/Worker";
+import Admin from "./pages/Admin";
 
 import io from "socket.io-client";
 
@@ -97,14 +101,18 @@ export default class App extends Component {
     const { currentGenerationProgress } = this.state;
     const done = currentGenerationProgress > 97;
     return (
-      <div>
-        <h1>Users online: {this.state.usersOnline}</h1>
+      <Router>
+        <div>
+          <Route path="/" exact component={Worker} />
+          <Route path="/admin" component={Admin} />
+          {/* <h1>Users online: {this.state.usersOnline}</h1>
         <Button type="dashed" onClick={() => this.execute()}>
           Execute Task
         </Button>
         <Progress percent={this.state.myProgress} />
-        <Progress percent={done ? 100 : currentGenerationProgress} />
-      </div>
+        <Progress percent={done ? 100 : currentGenerationProgress} /> */}
+        </div>
+      </Router>
     );
   }
 }

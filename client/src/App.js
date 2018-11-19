@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import { Button, Progress } from "antd";
-import { Bike, Tron, Genome } from "./Game";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import Worker from "./pages/Worker";
 import Admin from "./pages/Admin";
+import GameDisplay from "./components/GameDisplay";
 import io from "socket.io-client";
+
+import { Genome, Tron } from "./Game";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    const endpoint = "http://localhost:3000";
+    const endpoint = "http://192.168.5.1:3000";
     this.socket = io(endpoint);
     this.state = {
       usersOnline: 0,

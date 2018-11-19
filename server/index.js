@@ -144,6 +144,11 @@ io.on("connection", client => {
       dataPoints.push(currentData[0].length);
       io.sockets.emit("dataPointsUpdate", dataPoints);
 
+      io.sockets.emit("genomeUpdate", {
+        g1: currentData[0],
+        g2: currentData[currentData.length - 1]
+      });
+
       if (generation == targetGeneration) {
         io.sockets.emit("currentGenerationProgressUpdate", 100);
 

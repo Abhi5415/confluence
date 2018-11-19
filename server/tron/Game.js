@@ -712,6 +712,8 @@ class Tron {
     }
     g1.length = this.bike1Length;
     g2.length = this.bike2Length;
+    g1.grid = this.grid;
+    g1.grid = this.grid;
     let result = new Result(
       g1.length > g2.length ? g1 : g2,
       g2.length < g1.length ? g2 : g1

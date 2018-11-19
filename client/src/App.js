@@ -22,6 +22,7 @@ export default class App extends Component {
   }
 
   execute() {
+    console.log("Executing");
     this.socket.emit("execute");
   }
 
@@ -79,12 +80,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.socket.on("userUpdate", usersOnline => {
-      this.setState({
-        usersOnline
-      });
-    });
-
     this.socket.on(
       "currentGenerationProgressUpdate",
       currentGenerationProgress => {
@@ -104,7 +99,15 @@ export default class App extends Component {
       <Router>
         <div>
           <Route path="/" exact component={Worker} />
-          <Route path="/admin" component={Admin} />
+          <Route
+            path="/admin"
+            render={() => (
+              <Admin
+                socket={this.socket}
+                executeCallback={() => this.execute()}
+              />
+            )}
+          />
           {/* <h1>Users online: {this.state.usersOnline}</h1>
         <Button type="dashed" onClick={() => this.execute()}>
           Execute Task

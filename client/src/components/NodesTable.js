@@ -3,31 +3,37 @@ import { Table, Divider, Tag } from "antd";
 
 const columns = [
   {
-    title: "Device ID",
-    dataIndex: "deviceId",
-    key: "deviceId",
-    render: text => <a href="javascript:;">{text}</a>
+    title: "UUID",
+    dataIndex: "id",
+    key: "id"
   },
   {
-    title: "Device Type",
-    dataIndex: "deviceType",
-    key: "deviceType"
+    title: "Browser",
+    dataIndex: "browser",
+    key: "browser"
   },
   {
     title: "Status",
     dataIndex: "status",
-    key: "status"
+    key: "status",
+    render: text => <Tag color="green">{text}</Tag>
   }
 ];
 
-const data = [];
-function pushData(id, deviceType) {
-  id.forEach(id =>
-    data.push({ id: id[id], deviceType: deviceType[id], status: "ready" })
-  );
-}
-
-const NodesTable = () => {
+const NodesTable = ({ rawData }) => {
+  let data = [];
+  if (rawData == 0 || !rawData || rawData.length == 0) {
+    data = [];
+  } else {
+    if (rawData) {
+      console.log(rawData);
+      data = rawData.map(raw => ({
+        id: raw.id,
+        browser: raw.userAgent.split(" ")[0],
+        status: "Ready"
+      }));
+    }
+  }
   return <Table columns={columns} dataSource={data} />;
 };
 

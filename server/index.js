@@ -43,9 +43,9 @@ const calculateBatches = batches =>
     let i = 0;
     clientIds.forEach(clientId => {
       console.log(
-        `Emitted batch task to ${clientId} of length ${batches[i].length}.`
+        `Emitted batch task to ${clientId.id} of length ${batches[i].length}.`
       );
-      io.sockets.connected[clientId].emit("assignWork", {
+      io.sockets.connected[clientId.id].emit("assignWork", {
         genomes: batches[i++],
         function: "this is a function"
       });
@@ -58,8 +58,12 @@ for (let i = 0; i < 10000; i++) {
 }
 
 io.on("connection", client => {
-  io.sockets.emit("userUpdate", ++userCount);
-  clientIds.push(client.id);
+  clientIds.push({
+    id: client.id,
+    userAgent: client.request.headers["user-agent"]
+  });
+  ++userCount;
+  io.sockets.emit("userUpdate", clientIds);
 
   client.on("execute", () => {
     timeInitial = now();
@@ -146,9 +150,15 @@ io.on("connection", client => {
   });
 
   client.on("disconnect", () => {
-    const index = clientIds.indexOf(client.id);
+    let index = -1;
+    clientIds.forEach((client, i) => {
+      if (client.id === client.id) {
+        index = i;
+      }
+    });
     clientIds.splice(index, 1);
-    io.sockets.emit("userUpdate", --userCount);
+    --userCount;
+    io.sockets.emit("userUpdate", clientIds);
   });
 });
 

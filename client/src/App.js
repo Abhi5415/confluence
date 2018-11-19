@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Button, Progress } from "antd";
-import { Tron, Genome } from "./Game";
+import { Bike, Tron, Genome } from "./Game";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import SVG from 'react-svg-draw';
+import Tile from './components/tile';
 
 import Worker from "./pages/Worker";
 import Admin from "./pages/Admin";
+import GameDisplay from './components/GameDisplay';
 
 import io from "socket.io-client";
 
@@ -92,30 +95,47 @@ export default class App extends Component {
     this.socket.on("assignWork", data => this.compute(data));
   }
 
+
   render() {
     const { currentGenerationProgress } = this.state;
     const done = currentGenerationProgress > 97;
+    const grid = [];
+    for (let i = 0; i < 17; i++) {
+      let lol = [];
+      for (let j = 0; j < 17; j++) {
+        lol.push('.');
+      }
+      grid.push(lol);
+    }
+
+    
+
     return (
-      <Router>
-        <div>
-          <Route path="/" exact component={Worker} />
-          <Route
-            path="/admin"
-            render={() => (
-              <Admin
-                socket={this.socket}
-                executeCallback={() => this.execute()}
-              />
-            )}
-          />
-          {/* <h1>Users online: {this.state.usersOnline}</h1>
-        <Button type="dashed" onClick={() => this.execute()}>
-          Execute Task
-        </Button>
-        <Progress percent={this.state.myProgress} />
-        <Progress percent={done ? 100 : currentGenerationProgress} /> */}
-        </div>
-      </Router>
+ 
+
+      <div>
+        <GameDisplay grid={grid} width="400" />
+      </div>
+      // <Router>
+      //   <div>
+      //     <Route path="/" exact component={Worker} />
+      //     <Route
+      //       path="/admin"
+      //       render={() => (
+      //         <Admin
+      //           socket={this.socket}
+      //           executeCallback={() => this.execute()}
+      //         />
+      //       )}
+      //     />
+      //     {/* <h1>Users online: {this.state.usersOnline}</h1>
+      //   <Button type="dashed" onClick={() => this.execute()}>
+      //     Execute Task
+      //   </Button>
+      //   <Progress percent={this.state.myProgress} />
+      //   <Progress percent={done ? 100 : currentGenerationProgress} /> */}
+      //   </div>
+      // </Router>
     );
   }
 }

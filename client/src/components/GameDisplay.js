@@ -1,19 +1,23 @@
 import React from "react";
+import SVG from "react-svg-draw";
+import Tile from './tile.js'
 
 const GameDisplay = (props) => {
     
-    tiles = []
-    const populateSVG = (props) => {
-        for (i = 0; i < 17; i++ ){
-            for (j = 0; j < 17; j++ ){
-                tiles.push(<tile width={props.width} fill={props.grid[i][j]}/>)
-            }
+    let tiles = []
+    for (let i = 0; i < 17; i++ ){
+        for (let j = 0; j < 17; j++ ){
+            tiles.push(<Tile width={props.width} fill={props.grid[i][j]} x={j} y={i}/>)
         }
     }
-
+    
     return(
-        <svg width={props.width} height={props.height}>
-            {tiles.map((tile) => tile)}
-        </svg>
+        <div>
+            <SVG width={props.width} height={props.width}>
+                {tiles.map((tile) => tile)}
+            </SVG>
+        </div>
     )
 } 
+
+export default GameDisplay;

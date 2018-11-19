@@ -2,66 +2,96 @@ import React from 'react';
 import SVG from 'react-svg-draw';
 import GameDisplay from './GameDisplay';
 import Delay from 'react-delay';
-import { Bike, Tron, Genome } from "./Game";
+import { Bike, Tron, Genome } from "./../Game";
 
 
-const PlayGame = (props) => {
-    let g1 = props.genome1;
-    let g2 = props.genome2;
-    let grid = [];
-    let game = [];
-    
-    for (let i = 0; i < 17; i++) {
-        let to_push = [];
-        for (let j = 0; j < 17; j++) {
-          to_push.push(".");
+export default class PlayGame extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let grid = [];
+        for (let i = 0; i < 17; i++) {
+            let g = [];
+            for (let j = 0; j < 17; j++) g.push('.');
+            grid.push(g);
         }
-        grid.push(to_push);
-      }
-      for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[0].length; j++) {
-          grid[i][j] = ".";
-        }
-      }
-      for (let i = 0; i < 17; i++) {
-        grid[0][i] = "w";
-        grid[i][0] = "w";
-        grid[16][i] = "w";
-        grid[i][16] = "w";
-      }
-      let s = new Bike(8, 14);
-      let p = new Bike(8, 2);
-      grid[s.row][s.col] = "p";
-      grid[p.row][p.col] = "s";
-    
 
-    let t = new Tron();
-    while(!t.gameOver) {
+        this.state = {
+            gridLog: [grid],
+            currentGrid: grid,
+        }
+
+    }
+
+    componentDidMount() {
+        let g1 = this.props.g1;
+        let g2 = this.props.g2;
+
+        let t = new Tron();
+        console.log(t.grid);
+        let grid = [];
+        for (let i = 0; i < 17; i++) {
+            let g = [];
+            for (let j = 0; j < 17; j++) g.push('.');
+            grid.push(g);
+        }
+    
+        for (let i = 0; i < 17; i++) {
+            grid[0][i] = "w";
+            grid[i][0] = "w";
+            grid[16][i] = "w";
+            grid[i][16] = "w";
+          }
+
+          console.log(t.grid);
+          t.grid = grid;
+          console.log(t.grid);
+
+
+    while (!t.gameOver) {
         let move1 = g1.nextMove(
-            grid,
+            t.grid,
             new Bike(t.bike1Row, t.bike1Column),
             new Bike(t.bike2Row, t.bike2Column),
-            this.bike1Direction
-          );
-          let move2 = g2.nextMove(
-            this.grid,
+            t.bike1Direction
+        );
+        let move2 = g2.nextMove(
+            t.grid,
             new Bike(t.bike2Row, t.bike2Column),
             new Bike(t.bike1Row, t.bike1Column),
             t.bike2Direction
-          );
-          t.makeMove(move1, move2);
-            game.push(<Delay wait={250}><GameDisplay grid={grid} width={props.width}/></Delay>)
+        );
+        t.makeMove(move1, move2);
+        this.state.gridLog.push(t.grid.slice());
         g1.length = t.bike1Length;
         g2.length = t.bike2Length;
     }
 
+    // this.startDisplaying();
+}
+
+startDisplaying() {
+    let next = this.state.gridLog[0];
+    if (this.state.gridLog && this.state.gridLog.length > 0) {
+        setInterval(() => {
+            this.setState({
+                currentGrid: next,
+            })
+            if (this.state.gridLog && this.state.gridLog.length > 0) {
+                this.state.gridLog.shift();
+                next = this.state.gridLog[0];
+                console.log(this.state.currentGrid);
+            }
+        }, 5000)
+    }
+}
+
+render() {
     return(
         <div>
-           {game.map((move) => move)}
+           <GameDisplay grid={this.state.currentGrid} width={this.props.width}/>
         </div>
     )
+}
 } 
-
-export default GameDisplay;
-
 

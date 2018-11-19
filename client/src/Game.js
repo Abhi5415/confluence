@@ -709,6 +709,9 @@ class Tron {
         this.bike2Direction
       );
       this.makeMove(move1, move2);
+
+      // render ur component (this.grid)
+      // wait 0.3 seconds
     }
     g1.length = this.bike1Length;
     g2.length = this.bike2Length;
@@ -717,6 +720,10 @@ class Tron {
       g2.length < g1.length ? g2 : g1
     );
     return result;
+  }
+
+  returnNextGrid() {
+    
   }
 }
 

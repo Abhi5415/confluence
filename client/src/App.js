@@ -9,6 +9,7 @@ import Tile from './components/tile';
 import Worker from "./pages/Worker";
 import Admin from "./pages/Admin";
 import GameDisplay from './components/GameDisplay';
+import PlayGame from './components/PlayGame';
 
 import io from "socket.io-client";
 
@@ -134,7 +135,7 @@ export default class App extends Component {
  
 
       <div>
-        <GameDisplay grid={grid} width="400" />
+        <PlayGame grid={grid} width="400" g1={new Genome()} g2={new Genome()}/>
       </div>
       // <Router>
       //   <div>

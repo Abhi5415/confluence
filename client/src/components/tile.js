@@ -9,7 +9,7 @@ const Tile = (props) => {
     } else if (props.fill == 'p') {
         fill = '#2DBBD5';
     } else if (props.fill == 'w') {
-        fill = '#000000';
+        fill = 'lightgray';
     }
 
     return (
@@ -19,5 +19,3 @@ const Tile = (props) => {
 } 
 
 export default Tile;
-
-

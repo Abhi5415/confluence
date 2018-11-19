@@ -1,6 +1,6 @@
 import React from "react";
 import SVG from "react-svg-draw";
-import Tile from './tile.js'
+import Tile from './Tile.js'
 
 const GameDisplay = (props) => {
     

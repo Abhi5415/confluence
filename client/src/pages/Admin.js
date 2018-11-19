@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Input, Layout, Menu, Progress } from "antd";
 import NodesTable from "../components/NodesTable";
 import ParameterList from "../components/ParameterList";
-import ScoreChart from "../components/ScoreChart";
+import ScoreChart from "../components/scoreChart";
 const { Header, Content, Footer, Sider } = Layout;
 const { TextArea } = Input;
 

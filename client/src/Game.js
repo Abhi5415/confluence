@@ -722,9 +722,27 @@ class Tron {
     return result;
   }
 
-  returnNextGrid() {
-    
+  returnWinnerGrids(g1, g2) {
+    while (!this.gameOver) {
+      let move1 = g1.nextMove(
+        this.grid,
+        new Bike(this.bike1Row, this.bike1Column),
+        new Bike(this.bike2Row, this.bike2Column),
+        this.bike1Direction
+      );
+      let move2 = g2.nextMove(
+        this.grid,
+        new Bike(this.bike2Row, this.bike2Column),
+        new Bike(this.bike1Row, this.bike1Column),
+        this.bike2Direction
+      );
+      this.makeMove(move1, move2);
+
+    }
+      return this.grid;
   }
+
+
 }
 
 export { Genome, Bike, Tron };

@@ -17,7 +17,7 @@ const ScoreChart = ({points}) => {
         <Bar
             height={200}
             title="Score Per Generation"
-            data={salesData}
+            data={evolutionData}
         />
     )
 }

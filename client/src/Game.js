@@ -314,6 +314,8 @@ class Genome {
         bikeL = new Bike(myPosition.row + 1, myPosition.col);
         bikeR = new Bike(myPosition.row - 1, myPosition.col);
         break;
+      default:
+        break;
     }
 
     if (isFar) {
@@ -410,24 +412,28 @@ class Genome {
             return Math.abs(curr.row - i - 1);
           }
         }
+        break;
       case "d":
         for (let i = curr.row + 1; i < state.length; i++) {
           if (state[i][curr.col] !== ".") {
             return Math.abs(i - curr.row - 1);
           }
         }
+        break;
       case "l":
         for (let i = curr.col - 1; i >= 0; i--) {
           if (state[curr.row][i] !== ".") {
             return Math.abs(curr.col - i - 1);
           }
         }
+        break;
       case "r":
         for (let i = curr.col + 1; i < state[0].length; i++) {
           if (state[curr.row][i] !== ".") {
             return Math.abs(i - curr.col - 1);
           }
         }
+        break;
       default:
         return -1;
     }
@@ -737,12 +743,9 @@ class Tron {
         this.bike2Direction
       );
       this.makeMove(move1, move2);
-
     }
-      return this.grid;
+    return this.grid;
   }
-
-
 }
 
 export { Genome, Bike, Tron };

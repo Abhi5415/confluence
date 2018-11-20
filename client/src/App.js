@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Worker from "./pages/Worker";
 import Admin from "./pages/Admin";
-import GameDisplay from "./components/GameDisplay";
 import io from "socket.io-client";
-
-import { Genome, Tron } from "./Game";
 
 export default class App extends Component {
   constructor(props) {

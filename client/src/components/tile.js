@@ -4,11 +4,11 @@ import SVG from "react-svg-draw";
 const Tile = props => {
   let fill = "#FFFFFF";
 
-  if (props.fill == "s") {
+  if (props.fill === "s") {
     fill = "#99C6ED";
-  } else if (props.fill == "p") {
+  } else if (props.fill === "p") {
     fill = "#D6EAFB";
-  } else if (props.fill == "w") {
+  } else if (props.fill === "w") {
     fill = "#FAFAFA";
   }
 

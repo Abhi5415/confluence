@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Divider, Tag } from "antd";
+import { Table, Tag } from "antd";
 
 const columns = [
   {
@@ -24,7 +24,7 @@ const columns = [
 
 const NodesTable = ({ rawData }) => {
   let data = [];
-  if (rawData == 0 || !rawData || rawData.length == 0) {
+  if (rawData === 0 || !rawData || rawData.length === 0) {
     data = [];
   } else {
     if (rawData) {

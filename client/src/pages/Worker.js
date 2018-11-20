@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Input, Layout, Menu, Progress, Row, Col, Tag } from "antd";
+import { Layout, Menu, Progress } from "antd";
 import { Tron, Genome } from "../Game";
-import { runInThisContext } from "vm";
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content } = Layout;
 
 export default class Worker extends Component {
   constructor(props) {

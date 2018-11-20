@@ -56,7 +56,7 @@ export default class Worker extends Component {
     const { genomes } = data;
     let computed = [];
 
-    for (let i = 0; i < genomes.length; i += 2) {
+    for (let i = 0; i + 1 < genomes.length; i += 2) {
       let r = this.playGame(genomes[i], genomes[i + 1]);
       computed.push(r.loser);
       computed.push(r.winner);

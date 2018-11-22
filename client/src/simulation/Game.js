@@ -1,3 +1,9 @@
+/*
+  This file is a refactor of the Java simulation of the Tron game.
+  Please see that file for a detailed overview of the functions,
+  variables, and program flow.
+*/
+
 const RANDOM_LOWER_BOUND = -10;
 const RANDOM_UPPER_BOUND = 10;
 const RANDOM_MULTIPLIER_UPPER = 1.8;

@@ -2,22 +2,23 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
+// socketio
+import io from "socket.io-client";
+
+// import pages
 import Worker from "./pages/Worker";
 import Admin from "./pages/Admin";
-import io from "socket.io-client";
 
 export default class App extends Component {
   constructor(props) {
+    // config socket and stats
     super(props);
     const endpoint = "http://192.168.5.1:3000";
     this.socket = io(endpoint);
-    this.state = {
-      usersOnline: 0,
-      myProgress: 0
-    };
   }
 
   execute() {
+    // execute function call for work on the server
     this.socket.emit("execute");
   }
 
@@ -25,11 +26,13 @@ export default class App extends Component {
     return (
       <Router>
         <div>
+          {/* Path to the Worker route */}
           <Route
             path="/"
             exact
             render={() => <Worker socket={this.socket} />}
           />
+          {/* Path to the Admin route */}
           <Route
             path="/admin"
             render={() => (

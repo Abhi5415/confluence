@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Layout, Menu, Progress } from "antd";
-import { Tron, Genome } from "../Game";
+import { Tron, Genome } from "../simulation/Game";
 const { Header, Content } = Layout;
 
 export default class Worker extends Component {

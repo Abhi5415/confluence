@@ -204,9 +204,7 @@ export default class Admin extends Component {
           </div>
         )}
 
-        <Footer style={{ textAlign: "center" }}>
-          Insert Sick Name Here 2018
-        </Footer>
+        <Footer style={{ textAlign: "center" }}>Confluence</Footer>
       </Layout>
     );
   }

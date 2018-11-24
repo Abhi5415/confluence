@@ -1,4 +1,5 @@
 # Confluence
+A distributed computing approach to computationally heavy algorithms.
 
 ## Abstract
 This is an exploratory project into the domains of distributed computing and evolutionary AI. 
